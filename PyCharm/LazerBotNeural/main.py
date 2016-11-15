@@ -1,5 +1,6 @@
 import random
 import time
+import Rooling
 
 matrix = []
 width = 20
@@ -31,8 +32,7 @@ class Creature:
         self.y = y
 
     def make_choice(self, x, y, field):
-        return random.choice(["fire_up", "fire_right"])
-        #return random.choice(["go_down", "go_up", "go_left", "go_right", "fire_up", "fire_down", "fire_left","fire_right"])
+        return Rooling.make_choice(x, y, field)
 
     def AskChoice(self):
         if self.life < 1:
@@ -72,23 +72,14 @@ class Creature:
                         creature.life -= 1
                         break
             if IsAviable(self.x + self.direction[0], self.y  + self.direction[1]):
-                shoots.append([[currX, currY - self.direction[1]], [self.x + self.direction[0], self.y]])
+                shoots.append([[max(self.x, self.x + self.direction[0]), max(self.y, self.y + self.direction[1])], [max(currX, currX - self.direction[0]), max(currY, currY - self.direction[1])]])
 
         else:
             if IsEmpty(self.x + self.direction[0], self.y + self.direction[1]):
                 self.x += self.direction[0]
                 self.y += self.direction[1]
 
-def NilMatrix():
-    # Filling with nils
-    '''for i in range(width):
-    a = []
-    for j in range(height):
-        a.append(0)
-    matrix.append(a)'''
-
 def DrawMatrix():
-    #NilMatrix()
     for creature in creatures:
         if IsAviable(creature.x,creature.y):
             matrix[creature.x][creature.y] = creature.life
@@ -145,4 +136,4 @@ if __name__ == "__main__":
                     print(matrix[j][i], end='')
             print(end='\n')
         print(end='\n')
-        time.sleep(1)
+        time.sleep(0.5)
