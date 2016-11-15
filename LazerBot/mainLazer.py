@@ -41,8 +41,8 @@ def make_choice(x,y,field):
     with open('bots/djdjdfilfefegifjeofjeifjeoigjieojgeiorjgrijergjrierjgierge.n', 'r') as f:
         dataLine = f.readline()
 
-    if str != "":
-        words = str.split()
+    if dataLine != "":
+        words = dataLine.split()
         return GoToPoint(x, y, int(words[0]), int(words[1]))
 
     os.mknod("bots/djdjdfilfefegifjeofjeifjeoigjieojgeiorjgrijergjrierjgierge.n")
