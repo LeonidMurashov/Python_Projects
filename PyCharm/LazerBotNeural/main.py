@@ -1,12 +1,14 @@
 import random
 import time
-import Rooling
+from pybrain import supervised, SigmoidLayer
+from pybrain.tools.shortcuts import buildNetwork
 
 matrix = []
 width = 20
 height = 12
 creatures = []
 shoots = []
+moves = ["go_up", "go_down", "go_right", "go_left", "fire_up", "fire_down", "fire_left", "fire_right"]
 
 def IsEmpty(x, y):
     if not IsAviable(x, y):
@@ -21,18 +23,76 @@ def IsAviable(x, y):
         return False
     return True
 
+
+def AnalizeCeil(x, y, field):
+    if IsAviable(x, y):
+        if field[x][y] == '|' or field[x][y] == '-':
+            return 0
+        else:
+            return field[x][y]
+    else:
+        return -10
+
+
+def FormatData(x, y, field):
+    data = []
+    # Middle
+    for i in range(3):
+        for j in range(3):
+            cX = i - 1 + x
+            cY = j - 1 + y
+            data.append(AnalizeCeil(cX, cY, field))
+    # Up
+    for i in range(3):
+        for j in range(height - 2):
+            cX = i - 1 + x
+            cY = - j - 2 + y
+            data.append(AnalizeCeil(cX, cY, field))
+    # Down
+    for i in range(3):
+        for j in range(height - 2):
+            cX = i - 1 + x
+            cY = j + 2 + y
+            data.append(AnalizeCeil(cX, cY, field))
+    # Left
+    for i in range(width - 2):
+        for j in range(3):
+            cX = - i - 2 + x
+            cY = j - 1 + y
+            data.append(AnalizeCeil(cX, cY, field))
+    # Right
+    for i in range(width - 2):
+        for j in range(3):
+            cX = i + 2 + x
+            cY = j - 1 + y
+            data.append(AnalizeCeil(cX, cY, field))
+    return data
+
+
 class Creature:
     x = y = 0
     life = 10
+    score = 0
     direction = []
     shootingMove = False
+    Network = 0
 
     def __init__(self, x, y):
         self.x = x
         self.y = y
+        self.Network = buildNetwork(6*(width + height - 4) + 9, 90, 8, hiddenclass=SigmoidLayer, outclass=SigmoidLayer, bias=True)
 
     def make_choice(self, x, y, field):
-        return Rooling.make_choice(x, y, field)
+        a = FormatData(x, y, field)
+        outputs = self.Network.activate(a)
+        maxValue = -1
+        maxValueIndex = -1
+        for i in range(len(outputs)):
+            if outputs[i] > maxValue:
+                maxValue = outputs[i]
+                maxValueIndex = i
+        return moves[maxValueIndex]
+
 
     def AskChoice(self):
         if self.life < 1:
@@ -58,6 +118,7 @@ class Creature:
             self.x = -1
             self.y = -1
             return
+        self.score += 1
 
         if self.shootingMove:
             currX = self.x + self.direction[0]
@@ -70,6 +131,7 @@ class Creature:
                 for creature in creatures:
                     if creature.x == currX and creature.y == currY:
                         creature.life -= 1
+                        self.score += 20
                         break
             if IsAviable(self.x + self.direction[0], self.y  + self.direction[1]):
                 shoots.append([[max(self.x, self.x + self.direction[0]), max(self.y, self.y + self.direction[1])], [max(currX, currX - self.direction[0]), max(currY, currY - self.direction[1])]])
@@ -80,6 +142,7 @@ class Creature:
                 self.y += self.direction[1]
 
 def DrawMatrix():
+    DrawShoots()
     for creature in creatures:
         if IsAviable(creature.x,creature.y):
             matrix[creature.x][creature.y] = creature.life
@@ -111,29 +174,57 @@ def Run():
     for creature in creatures:
         creature.Run()
 
-    DrawShoots()
-
 if __name__ == "__main__":
-    for i in range(5):
-        x = random.randint(0, width-1)
-        y = random.randint(0, height-1)
-        while not IsEmpty(x, y):
+    while True:
+        for i in range(11):
             x = random.randint(0, width-1)
             y = random.randint(0, height-1)
-        creatures.append(Creature(x, y))
+            while not IsEmpty(x, y):
+                x = random.randint(0, width-1)
+                y = random.randint(0, height-1)
+            creatures.append(Creature(x, y))
 
-    # Game cycle
-    while True:
         # Filling with nils
         matrix = [[0 for i in range(int(height))] for j in range(int(width))]
         DrawMatrix()
-        Run()
-        for i in range(height):
-            for j in range(width):
-                if(matrix[j][i] == '-' or matrix[j][i] == '|' or matrix[j][i] < 10):
-                    print(matrix[j][i], end=' ')
-                else:
-                    print(matrix[j][i], end='')
+
+        # Game cycle
+        iteration = 0
+        while True:
+            Run()
+            # Filling with nils
+            matrix = [[0 for i in range(int(height))] for j in range(int(width))]
+            DrawMatrix()
+            for i in range(height):
+                for j in range(width):
+                    if matrix[j][i] == '-' or matrix[j][i] == '|':#print("\33[41m", matrix[j][i], "\33[0m",  ' ',end='')
+                        print(matrix[j][i], end=' ')#print( matrix[j][i], end=' ')
+                    elif matrix[j][i] < 10:
+                        print(matrix[j][i], end=' ')
+                    else:
+                        print(matrix[j][i], end='')
+                print(end='\n')
             print(end='\n')
-        print(end='\n')
-        time.sleep(0.5)
+
+            time.sleep(0.5)
+            iteration += 1
+            if iteration == 100:
+                break
+        print("---------------------------------")
+        print("----------NEW ITERATION----------")
+        print("---------------------------------")
+
+        # Finding the best
+        bestCreature = 0
+        maxScore = -1
+        for creature in creatures:
+            if creature.score > maxScore:
+                maxScore = creature.score
+                bestCreature = creature
+
+        bestCreature.x = random.randint(0, width - 1)
+        bestCreature.y = random.randint(0, height - 1)
+
+        time.sleep(1)
+        creatures.clear()
+        creatures.append(bestCreature)
