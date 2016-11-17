@@ -9,6 +9,7 @@ height = 12
 creatures = []
 shoots = []
 moves = ["go_up", "go_down", "go_right", "go_left", "fire_up", "fire_down", "fire_left", "fire_right"]
+scoreRecord = 0
 
 def IsEmpty(x, y):
     if not IsAviable(x, y):
@@ -85,6 +86,9 @@ class Creature:
     def make_choice(self, x, y, field):
         a = FormatData(x, y, field)
         outputs = self.Network.activate(a)
+
+        self.Network.params = self.Network.params
+
         maxValue = -1
         maxValueIndex = -1
         for i in range(len(outputs)):
@@ -206,7 +210,7 @@ if __name__ == "__main__":
                 print(end='\n')
             print(end='\n')
 
-            time.sleep(0.5)
+            #time.sleep(0.5)
             iteration += 1
             if iteration == 100:
                 break
@@ -222,9 +226,13 @@ if __name__ == "__main__":
                 maxScore = creature.score
                 bestCreature = creature
 
+        time.sleep(1)
+        print(bestCreature.score)
+
         bestCreature.x = random.randint(0, width - 1)
         bestCreature.y = random.randint(0, height - 1)
+        bestCreature.score = 0
+        bestCreature.life = 10
 
-        time.sleep(1)
         creatures.clear()
         creatures.append(bestCreature)
