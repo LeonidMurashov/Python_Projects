@@ -7,9 +7,8 @@ from pybrain.tools.shortcuts import buildNetwork
 from pybrain.tools.customxml.networkwriter import NetworkWriter
 from pybrain.tools.customxml.networkreader import NetworkReader
 
-graphFileAdress = '/media/sf_Python/PyCharm/LazerBotNeural/Graph4.csv'
-averageFileAdress = '/media/sf_Python/PyCharm/LazerBotNeural/GraphAverage.csv'
-bestBotFileAdress = 'BestLazerBot4.xml'
+networkFileAdress = '/media/sf_Python/PyCharm/LazerBotNeural/BestLazerBot3.xml'
+
 matrix = []
 width = 20
 height = 12
@@ -18,9 +17,8 @@ creatures = []
 shoots = []
 moves = ["go_up", "go_down", "go_right", "go_left", "fire_up", "fire_down", "fire_left", "fire_right"]
 scoreRecord = 0
-Population_Size = 1500 # Must be dividable by 10
-Plays_Count = 3
-InputLayerSize = 6*(width + height - 4) + 9
+Population_Size = 1500  # Must be dividable by 10
+InputLayerSize = 6 * (width + height - 4) + 9
 
 def IsEmpty(x, y):
 	if not IsAviable(x, y):
@@ -31,7 +29,7 @@ def IsEmpty(x, y):
 	return True
 
 def IsAviable(x, y):
-	if x < 0 or x > width-1 or y < 0 or y > height-1:
+	if x < 0 or x > width - 1 or y < 0 or y > height - 1:
 		return False
 	return True
 
@@ -78,7 +76,7 @@ def FormatData(x, y, field):
 			cY = j - 1 + y
 			data.append(AnalizeCeil(cX, cY, field))
 	return data
-	
+
 
 class Creature:
 	x = y = -1
@@ -91,7 +89,8 @@ class Creature:
 
 	def __init__(self, Network=0):
 		if Network == 0:
-			self.Network = buildNetwork(int(InputLayerSize), int(InputLayerSize / 2), 8, hiddenclass=SigmoidLayer, outclass=SigmoidLayer, bias=True)
+			self.Network = buildNetwork(int(InputLayerSize), int(InputLayerSize / 2), 8, hiddenclass=SigmoidLayer,
+										outclass=SigmoidLayer, bias=True)
 		else:
 			self.Network = Network
 
@@ -154,8 +153,9 @@ class Creature:
 						creature.life -= 1
 						self.score += 20
 						break
-			if IsAviable(self.x + self.direction[0], self.y  + self.direction[1]):
-				shoots.append([[max(self.x, self.x + self.direction[0]), max(self.y, self.y + self.direction[1])], [max(currX, currX - self.direction[0]), max(currY, currY - self.direction[1])]])
+			if IsAviable(self.x + self.direction[0], self.y + self.direction[1]):
+				shoots.append([[max(self.x, self.x + self.direction[0]), max(self.y, self.y + self.direction[1])],
+							   [max(currX, currX - self.direction[0]), max(currY, currY - self.direction[1])]])
 
 		else:
 			if IsEmpty(self.x + self.direction[0], self.y + self.direction[1]):
@@ -165,11 +165,11 @@ class Creature:
 def DrawMatrix():
 	DrawShoots()
 	for creature in creaturesPlaying:
-		if IsAviable(creature.x,creature.y):
+		if IsAviable(creature.x, creature.y):
 			matrix[creature.x][creature.y] = creature.life
 
 def CreaturesMovesComparator(a):
-	if not a.shootingMove: #like moving is less than shooting
+	if not a.shootingMove:  # like moving is less than shooting
 		return 0
 	return 1
 
@@ -182,30 +182,26 @@ def DrawShoots():
 			continue
 		if shoot[0][0] == shoot[1][0]:
 			for y in range(abs(shoot[0][1] - shoot[1][1])):
-				matrix[shoot[0][0]][y + min(shoot[0][1], shoot[1][1])] = '|' # Vertical slash
+				matrix[shoot[0][0]][y + min(shoot[0][1], shoot[1][1])] = '|'  # Vertical slash
 		else:
 			for x in range(abs(shoot[0][0] - shoot[1][0])):
-				matrix[x + min(shoot[0][0], shoot[1][0])][shoot[0][1]] = "--" # Horizontal slash
+				matrix[x + min(shoot[0][0], shoot[1][0])][shoot[0][1]] = "--"  # Horizontal slash
 	shoots.clear()
 
 def Run():
 	for creature in creaturesPlaying:
 		creature.AskChoice()
 
-	random.shuffle(creaturesPlaying)
+	#random.shuffle(creaturesPlaying)
 	creaturesPlaying.sort(key=CreaturesMovesComparator)
 
 	for creature in creaturesPlaying:
 		creature.Run()
 
-def Play(printing = True):
+def Play(printing=True):
 	global matrix
-
-	# Reheal all
-	for creature in creaturesPlaying:
-		creature.life = 10
-
 	# Filling with nils
+
 	matrix = [[0 for i in range(int(height))] for j in range(int(width))]
 	DrawMatrix()
 
@@ -219,6 +215,11 @@ def Play(printing = True):
 		if printing:
 			for i in range(height):
 				for j in range(width):
+					if i == creatures[0].y and j == creatures[0].x:
+						print('*', end=' ')
+						continue
+
+
 					if matrix[j][i] == "--":  # print("\33[41m", matrix[j][i], "\33[0m",  ' ',end='')
 						print(matrix[j][i], end='')  # print( matrix[j][i], end=' ')
 					elif matrix[j][i] == '|' or matrix[j][i] < 10:
@@ -228,36 +229,10 @@ def Play(printing = True):
 				print(end='\n')
 			print(end='\n')
 
-		# time.sleep(0.5)
+		time.sleep(0.1)
 		iteration += 1
-		if iteration == 30:
+		if iteration == 50:
 			break
-
-# Merge and mutate two numbers
-def Merge(a, b):
-	k = 1
-	sign = 1
-	if random.random() < 0.2:
-		k = random.random()*1.5 + 0.5
-		if random.random() < 0.5:
-			sign = -1
-
-	return ((a + b)/2)*k*sign
-
-# Breed two creatures
-def Breed(creatureA, creatureB):
-	finalNetwork = buildNetwork(int(InputLayerSize), int(InputLayerSize / 2), 8, hiddenclass=SigmoidLayer, outclass=SigmoidLayer, bias=True)
-
-	paramsA = creatureA.GetNetworkParams()
-	paramsB = creatureB.GetNetworkParams()
-	finalParams = []
-
-	# Merging weights and biases
-	for i in range(len(paramsA)):
-		finalParams.append(Merge(paramsA[i], paramsB[i]))
-
-	finalNetwork._setParameters(finalParams)
-	return Creature(finalNetwork)
 
 def ShuffleCreaturesPlaying():
 	for creature in creaturesPlaying:
@@ -270,81 +245,35 @@ def ShuffleCreaturesPlaying():
 
 if __name__ == "__main__":
 
-	# Creating first generation
-	for i in range(Population_Size):
-		creatures.append(Creature())
-
 	iteration = 0
 	while True:
+
+		creatures.clear()
+		# Creating generation
+		for i in range(10):
+			creatures.append(Creature())
+		creatures[0].Network = NetworkReader.readFrom(networkFileAdress)
+
 		print("---------------------------------")
 		print("----------NEW ITERATION----------")
-		print("-----------number: ", iteration,"-------------")
+		print("-----------number: ", iteration, "-------------")
 		print("---------------------------------")
-
 		time.sleep(1)
 
-		# Run creatures
-		playIteration = 0
-		while playIteration != Population_Size:
-			creaturesPlaying = creatures[0 + playIteration:10 + playIteration]
-			playIteration += 10
-			for i in range(Plays_Count):
-				ShuffleCreaturesPlaying()
-				Play(True)
-
-		# Getting average score and some data for averageFile
-		allScore = 0
 		for creature in creatures:
-			creature.score /= Plays_Count
-			allScore += creature.score
-		allScore /= len(creatures)
-		creatures.sort(key=CreaturesScoresComparator, reverse=True)
+			creature.life = 10
 
-		# Finding the best and save it in case of beating record
-		bestCreature = creatures[0]
-		print("Best score:", bestCreature.score)
-		graphFile = open(graphFileAdress, 'a')
-		graphFile.write(str(iteration))
-		graphFile.write(';')
-		graphFile.write(str(bestCreature.score))
-		graphFile.write('\n')
-		#graphFile.close()
-		if scoreRecord < bestCreature.score:
-			scoreRecord = bestCreature.score
-			NetworkWriter.writeToFile(bestCreature.Network, bestBotFileAdress)
+		# Run creatures
+		creaturesPlaying = creatures
+		ShuffleCreaturesPlaying()
+		Play(True)
 
-		# Graphing average
-		print("Average score:", allScore)
-		graphFile = open(averageFileAdress, 'a')
-		graphFile.write(str(iteration))
-		graphFile.write(';')
-		graphFile.write(str(allScore))
-		graphFile.write('\n')
-
-		# Getting half-final
-		halfFinal = []
-		random.shuffle(creatures)
-		scoresSum = 0
-		for creature in creatures: scoresSum += creature.score
-		for creature in creatures: creature.passProbability = creature.score / scoresSum
-		# Adding relying on probability
-		i = 0
-		isPassed = [False for i in range(Population_Size)]
-		while len(halfFinal) != Population_Size / 2:
-			if not creatures[i%Population_Size].passProbability > random.random() and isPassed[i%Population_Size] == False:
-				halfFinal.append(creatures[i%Population_Size])
-				isPassed[i%Population_Size] = True
-			i += 1
-
-		# Breeding new generation
-		newGeneration = []
-		while len(newGeneration) != Population_Size:
-			newGeneration.append(Breed(random.choice(halfFinal), random.choice(halfFinal)))
-
-		# Replace old generation to young
-		del creatures
-		creatures = newGeneration
-		iteration += 1
+		# Finding the best
+		'''bestScore = 0
+		for creature in creatures:
+			if bestScore < creature.score:
+				bestScore = creature.score'''
+		print("Best score:", creatures[0].score)
 
 '''bestCreature.x = random.randint(0, width - 1)
 bestCreature.y = random.randint(0, height - 1)
