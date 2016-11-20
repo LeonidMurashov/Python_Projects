@@ -1,7 +1,11 @@
-roofTop = input().split()
-roofLeft = input().split()
-roofRight = input().split()
 
-if roofRight[1] != 0:
-    chislo = abs(float(roofRight[0]) - float(roofLeft[0])) * float(roofRight[1])
-    print(chislo)
+def func(a, field):
+    a = 5
+    field = [5, 5]
+    return a, field
+
+field = [6, 6]
+a = 7
+
+b, f = func(a, field)
+a = 8

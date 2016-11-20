@@ -9,7 +9,7 @@ from pybrain.tools.shortcuts import buildNetwork
 from pybrain.tools.customxml.networkwriter import NetworkWriter
 from pybrain.tools.customxml.networkreader import NetworkReader
 
-version = 11
+version = 15
 graphFileAdress = '/media/sf_Python/PyCharm/LazerBotNeural/Graph' + str(version) + '.csv'
 averageFileAdress = '/media/sf_Python/PyCharm/LazerBotNeural/GraphAverage' + str(version) + '.csv'
 bestBotFileAdress = 'BestLazerBot' + str(version) + '.xml'
@@ -240,9 +240,9 @@ def Play(printing = True):
 def Merge(a, b, mutations):
 	k = 1
 	sign = 1
-	if mutations and random.random() < 0.4:
+	if random.random() < mutations:
 		k = random.random()*1.5 + 0.5
-		if random.random() < 0.5:
+		if random.random() < 0.05:
 			sign = -1
 
 	return ((a + b)/2)*k*sign
@@ -255,8 +255,9 @@ def Breed(creatureA, creatureB):
 	paramsB = creatureB.GetNetworkParams()
 	finalParams = []
 
-	mutations = random.random() < 0.5
-
+	mutations = 0
+	if random.random() < 0.5:
+		mutations = 1
 	# Merging weights and biases
 	for i in range(len(paramsA)):
 		finalParams.append(Merge(paramsA[i], paramsB[i], mutations))
@@ -346,7 +347,7 @@ if __name__ == "__main__":
 			if not creatures[i%Population_Size].passProbability > random.random() and isPassed[i%Population_Size] == False:
 				halfFinal.append(creatures[i%Population_Size])
 				isPassed[i%Population_Size] = True
-			i += 1
+			i = random.randint(0, Population_Size)
 
 		# Breeding new generation
 		newGeneration = []
