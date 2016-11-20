@@ -1,15 +1,18 @@
+import os
 import random
 import time
 
+import _thread
 from dask.tests.test_base import np
 from pybrain import SigmoidLayer, FeedForwardNetwork
 from pybrain.tools.shortcuts import buildNetwork
 from pybrain.tools.customxml.networkwriter import NetworkWriter
 from pybrain.tools.customxml.networkreader import NetworkReader
 
-graphFileAdress = '/media/sf_Python/PyCharm/LazerBotNeural/Graph4.csv'
-averageFileAdress = '/media/sf_Python/PyCharm/LazerBotNeural/GraphAverage.csv'
-bestBotFileAdress = 'BestLazerBot4.xml'
+version = 11
+graphFileAdress = '/media/sf_Python/PyCharm/LazerBotNeural/Graph' + str(version) + '.csv'
+averageFileAdress = '/media/sf_Python/PyCharm/LazerBotNeural/GraphAverage' + str(version) + '.csv'
+bestBotFileAdress = 'BestLazerBot' + str(version) + '.xml'
 matrix = []
 width = 20
 height = 12
@@ -18,7 +21,7 @@ creatures = []
 shoots = []
 moves = ["go_up", "go_down", "go_right", "go_left", "fire_up", "fire_down", "fire_left", "fire_right"]
 scoreRecord = 0
-Population_Size = 1500 # Must be dividable by 10
+Population_Size =100 # Must be dividable by 10
 Plays_Count = 3
 InputLayerSize = 6*(width + height - 4) + 9
 
@@ -234,10 +237,10 @@ def Play(printing = True):
 			break
 
 # Merge and mutate two numbers
-def Merge(a, b):
+def Merge(a, b, mutations):
 	k = 1
 	sign = 1
-	if random.random() < 0.2:
+	if mutations and random.random() < 0.4:
 		k = random.random()*1.5 + 0.5
 		if random.random() < 0.5:
 			sign = -1
@@ -252,9 +255,11 @@ def Breed(creatureA, creatureB):
 	paramsB = creatureB.GetNetworkParams()
 	finalParams = []
 
+	mutations = random.random() < 0.5
+
 	# Merging weights and biases
 	for i in range(len(paramsA)):
-		finalParams.append(Merge(paramsA[i], paramsB[i]))
+		finalParams.append(Merge(paramsA[i], paramsB[i], mutations))
 
 	finalNetwork._setParameters(finalParams)
 	return Creature(finalNetwork)
@@ -267,6 +272,9 @@ def ShuffleCreaturesPlaying():
 			x = random.randint(0, width - 1)
 			y = random.randint(0, height - 1)
 		creature.SetXY(x, y)
+
+def grapherThread():
+	os.system("/home/leonid/anaconda3/bin/python /media/sf_Python/PyCharm/Plotter/mainPlotter.py " + graphFileAdress + " " + averageFileAdress)
 
 if __name__ == "__main__":
 
@@ -308,7 +316,7 @@ if __name__ == "__main__":
 		graphFile.write(';')
 		graphFile.write(str(bestCreature.score))
 		graphFile.write('\n')
-		#graphFile.close()
+		graphFile.close()
 		if scoreRecord < bestCreature.score:
 			scoreRecord = bestCreature.score
 			NetworkWriter.writeToFile(bestCreature.Network, bestBotFileAdress)
@@ -320,6 +328,10 @@ if __name__ == "__main__":
 		graphFile.write(';')
 		graphFile.write(str(allScore))
 		graphFile.write('\n')
+		graphFile.close()
+
+		# Opening graph program
+		if iteration == 0: _thread.start_new_thread(grapherThread,())
 
 		# Getting half-final
 		halfFinal = []

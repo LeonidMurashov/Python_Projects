@@ -7,7 +7,7 @@ from pybrain.tools.shortcuts import buildNetwork
 from pybrain.tools.customxml.networkwriter import NetworkWriter
 from pybrain.tools.customxml.networkreader import NetworkReader
 
-networkFileAdress = '/media/sf_Python/PyCharm/LazerBotNeural/BestLazerBot3.xml'
+networkFileAdress = '/media/sf_Python/PyCharm/LazerBotNeural/BestLazerBot7.xml'
 
 matrix = []
 width = 20
@@ -192,7 +192,7 @@ def Run():
 	for creature in creaturesPlaying:
 		creature.AskChoice()
 
-	#random.shuffle(creaturesPlaying)
+	random.shuffle(creaturesPlaying)
 	creaturesPlaying.sort(key=CreaturesMovesComparator)
 
 	for creature in creaturesPlaying:
@@ -229,7 +229,7 @@ def Play(printing=True):
 				print(end='\n')
 			print(end='\n')
 
-		time.sleep(0.1)
+		time.sleep(0.001)
 		iteration += 1
 		if iteration == 50:
 			break
@@ -246,6 +246,7 @@ def ShuffleCreaturesPlaying():
 if __name__ == "__main__":
 
 	iteration = 0
+	networkName = ''
 	while True:
 
 		creatures.clear()
@@ -253,6 +254,7 @@ if __name__ == "__main__":
 		for i in range(10):
 			creatures.append(Creature())
 		creatures[0].Network = NetworkReader.readFrom(networkFileAdress)
+		networkName = creatures[0].Network.name
 
 		print("---------------------------------")
 		print("----------NEW ITERATION----------")
@@ -273,7 +275,12 @@ if __name__ == "__main__":
 		for creature in creatures:
 			if bestScore < creature.score:
 				bestScore = creature.score'''
+		creatures.sort(key=CreaturesScoresComparator, reverse=True)
 		print("Best score:", creatures[0].score)
+		for creature in creatures:
+			if creature.Network.name == networkName:
+				print("NN score: ", creature.score, " Name: ", creature.Network.name)
+				break
 
 '''bestCreature.x = random.randint(0, width - 1)
 bestCreature.y = random.randint(0, height - 1)
