@@ -9,7 +9,7 @@ from pybrain.tools.shortcuts import buildNetwork
 from pybrain.tools.customxml.networkwriter import NetworkWriter
 from pybrain.tools.customxml.networkreader import NetworkReader
 
-version = 15
+version = 16
 graphFileAdress = '/media/sf_Python/PyCharm/LazerBotNeural/Graph' + str(version) + '.csv'
 averageFileAdress = '/media/sf_Python/PyCharm/LazerBotNeural/GraphAverage' + str(version) + '.csv'
 bestBotFileAdress = 'BestLazerBot' + str(version) + '.xml'
@@ -21,8 +21,8 @@ creatures = []
 shoots = []
 moves = ["go_up", "go_down", "go_right", "go_left", "fire_up", "fire_down", "fire_left", "fire_right"]
 scoreRecord = 0
-Population_Size =100 # Must be dividable by 10
-Plays_Count = 3
+Population_Size = 1000 # Must be dividable by 10
+Plays_Count = 5
 InputLayerSize = 6*(width + height - 4) + 9
 
 def IsEmpty(x, y):
@@ -257,7 +257,7 @@ def Breed(creatureA, creatureB):
 
 	mutations = 0
 	if random.random() < 0.5:
-		mutations = 1
+		mutations = random.random()
 	# Merging weights and biases
 	for i in range(len(paramsA)):
 		finalParams.append(Merge(paramsA[i], paramsB[i], mutations))
