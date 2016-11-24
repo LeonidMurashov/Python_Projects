@@ -52,8 +52,8 @@ def RunCommand(x, y, score, command, field, life):
         if hit:
             score += 20
 
-    life -= fireZones[x][y]*1.5
-    life -= sightZones[x][y]*0.5
+    life -= fireZones[x][y]
+    score -= sightZones[x][y]*1
     # For life bot
     score += 1
     # TODO life cycle
@@ -63,7 +63,7 @@ def Delme(field):
     field[1][1] = 0
 
 def Rec(iteration, x, y, score, field, life):
-    if iteration > 2 or life < 1:
+    if iteration > 4 or life < 1:
         return score
     # Do iteration
     maxScore = 0
@@ -81,7 +81,6 @@ def Rec(iteration, x, y, score, field, life):
         print(end='\n')
         print('x = ', x, 'y = ', y)
         print(end='\n')'''
-
         RecResult = Rec(iteration + 1, _x, _y, _score, deepcopy(_field), _life)
         if maxScore < RecResult:
             maxScore = RecResult
@@ -101,6 +100,8 @@ def BuildFireZones(field, x, y):
     for i in range(len(field)):
         for j in range(len(field[0])):
             if field[i][j] != 0 and not (i == x and j == y):
+                if len(field[i][j]['history']) == 0:
+                    continue
                 command = field[i][j]['history'][len(field[i][j]['history']) - 1]
 
                 # Creating fires matrix
@@ -139,10 +140,11 @@ def make_choice(x, y, field):
 if __name__ == "__main__":
     anLife = {'life' : 1, 'history' : ["fire_up", "fire_right"]}
     myLife = {'life' : 10, 'history' : ["fire_up", "fire_right"]}
-    field = [[0 for i in range(int(20))] for j in range(int(20))]
+    field = [[0 for i in range(int(20))] for j in range(int(15))]
     field[5][15] = myLife
     field[7][11] = anLife
     field[5][13] = anLife
     field[9][19] = anLife
+    field[2][3] = anLife
     print(make_choice(5, 15, field))
     #print(make_choice(1, 2, [ [0, 0, 0, 0, 0], [0, 0, myLife, 0, 0], [0, 0, anLife, 0, 0], [0, 0, anLife, 0, 0], [0, 0, anLife, 0, 0], [0, 0, anLife, 0, 0], [0, 0, anLife, 0, 0] ] ))

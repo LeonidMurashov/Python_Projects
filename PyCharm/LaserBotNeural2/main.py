@@ -1,14 +1,18 @@
+import os
 import random
 import time
 
+import _thread
 from dask.tests.test_base import np
 from pybrain import SigmoidLayer, FeedForwardNetwork
 from pybrain.tools.shortcuts import buildNetwork
 from pybrain.tools.customxml.networkwriter import NetworkWriter
 from pybrain.tools.customxml.networkreader import NetworkReader
 
-networkFileAdress = '/media/sf_Python/PyCharm/LaserBotNeural2/BestLazerBot15.xml'
-
+version = 23
+graphFileAdress = '/media/sf_Python/PyCharm/LaserBotNeural2/Graph' + str(version) + '.csv'
+averageFileAdress = '/media/sf_Python/PyCharm/LaserBotNeural2/GraphAverage' + str(version) + '.csv'
+bestBotFileAdress = 'BestLazerBot' + str(version) + '.xml'
 matrix = []
 width = 20
 height = 12
@@ -17,8 +21,9 @@ creatures = []
 shoots = []
 moves = ["go_up", "go_down", "go_right", "go_left", "fire_up", "fire_down", "fire_left", "fire_right"]
 scoreRecord = 0
-Population_Size = 1500  # Must be dividable by 10
-InputLayerSize = 6 * (width + height - 4) + 9
+Population_Size = 1000  # Must be dividable by 10
+Plays_Count = 5
+InputLayerSize = 45
 
 def IsEmpty(x, y):
 	if not IsAviable(x, y):
@@ -33,48 +38,24 @@ def IsAviable(x, y):
 		return False
 	return True
 
-
-def AnalizeCeil(x, y, field):
-	if IsAviable(x, y):
-		if field[x][y] == '|' or field[x][y] == '--':
-			return 0
-		else:
-			return field[x][y]
-	else:
-		return -10
+def isint(value):
+	try:
+		int(value)
+		return True
+	except ValueError:
+		return False
 
 def FormatData(x, y, field):
-	data = []
-	# Middle
-	for i in range(3):
-		for j in range(3):
-			cX = i - 1 + x
-			cY = j - 1 + y
-			data.append(AnalizeCeil(cX, cY, field))
-	# Up
-	for i in range(3):
-		for j in range(height - 2):
-			cX = i - 1 + x
-			cY = - j - 2 + y
-			data.append(AnalizeCeil(cX, cY, field))
-	# Down
-	for i in range(3):
-		for j in range(height - 2):
-			cX = i - 1 + x
-			cY = j + 2 + y
-			data.append(AnalizeCeil(cX, cY, field))
-	# Left
-	for i in range(width - 2):
-		for j in range(3):
-			cX = - i - 2 + x
-			cY = j - 1 + y
-			data.append(AnalizeCeil(cX, cY, field))
-	# Right
-	for i in range(width - 2):
-		for j in range(3):
-			cX = i + 2 + x
-			cY = j - 1 + y
-			data.append(AnalizeCeil(cX, cY, field))
+	data = [x, y, field[x][y]]
+	for i in range(width):
+		for j in range(height):
+			if isint(field[i][j]) and field[i][j] > 0 and not (i == x and j==y):
+				data.append(i - x)
+				data.append(j - y)
+				data.append(field[i][j])
+
+	while len(data) != InputLayerSize:
+		data.append(0)
 	return data
 
 
@@ -89,7 +70,7 @@ class Creature:
 
 	def __init__(self, Network=0):
 		if Network == 0:
-			self.Network = buildNetwork(int(InputLayerSize), int(InputLayerSize / 2), 8, hiddenclass=SigmoidLayer,
+			self.Network = buildNetwork(int(InputLayerSize), int(InputLayerSize), 8, hiddenclass=SigmoidLayer,
 										outclass=SigmoidLayer, bias=True)
 		else:
 			self.Network = Network
@@ -200,8 +181,12 @@ def Run():
 
 def Play(printing=True):
 	global matrix
-	# Filling with nils
 
+	# Reheal all
+	for creature in creaturesPlaying:
+		creature.life = 10
+
+	# Filling with nils
 	matrix = [[0 for i in range(int(height))] for j in range(int(width))]
 	DrawMatrix()
 
@@ -215,11 +200,6 @@ def Play(printing=True):
 		if printing:
 			for i in range(height):
 				for j in range(width):
-					if i == creatures[0].y and j == creatures[0].x:
-						print('*', end=' ')
-						continue
-
-
 					if matrix[j][i] == "--":  # print("\33[41m", matrix[j][i], "\33[0m",  ' ',end='')
 						print(matrix[j][i], end='')  # print( matrix[j][i], end=' ')
 					elif matrix[j][i] == '|' or matrix[j][i] < 10:
@@ -229,58 +209,139 @@ def Play(printing=True):
 				print(end='\n')
 			print(end='\n')
 
-		time.sleep(0.001)
+		# time.sleep(0.5)
 		iteration += 1
-		if iteration == 50:
+		if iteration == 30:
 			break
 
-def ShuffleCreaturesPlaying():
-	for creature in creaturesPlaying:
+# Merge and mutate two numbers
+def Merge(a, b, mutations):
+	k = 1
+	sign = 1
+	if random.random() < mutations:
+		k = random.random() * 1.5 + 0.5
+		if random.random() < 0.05:
+			sign = -1
+
+	return ((a + b) / 2) * k * sign
+
+# Breed two creatures
+def Breed(creatureA, creatureB):
+	finalNetwork = buildNetwork(int(InputLayerSize), int(InputLayerSize), 8, hiddenclass=SigmoidLayer,
+										outclass=SigmoidLayer, bias=True)
+
+	paramsA = creatureA.GetNetworkParams()
+	paramsB = creatureB.GetNetworkParams()
+	finalParams = []
+
+	mutations = 0
+	if random.random() < 0.25:
+		mutations = 0.2
+	# Merging weights and biases
+	for i in range(len(paramsA)):
+		finalParams.append(Merge(paramsA[i], paramsB[i], mutations))
+
+	finalNetwork._setParameters(finalParams)
+	return Creature(finalNetwork)
+
+def GetRandomPositions():
+	positions = [[0,0], [width - 1, 1], [width - 2, height - 1], [1, height - 2]] # Some default positions
+	while len(positions) != len(creaturesPlaying):
 		x = random.randint(0, width - 1)
 		y = random.randint(0, height - 1)
 		while not IsEmpty(x, y):
 			x = random.randint(0, width - 1)
 			y = random.randint(0, height - 1)
-		creature.SetXY(x, y)
+		positions.append([x, y])
+	return positions
+
+def grapherThread():
+	os.system("/home/leonid/anaconda3/bin/python /media/sf_Python/PyCharm/Plotter/mainPlotter.py " + graphFileAdress + " " + averageFileAdress)
 
 if __name__ == "__main__":
 
+	# Creating first generation
+	for i in range(Population_Size):
+		creatures.append(Creature())
+
 	iteration = 0
-	networkName = ''
 	while True:
-
-		creatures.clear()
-		# Creating generation
-		for i in range(10):
-			creatures.append(Creature())
-		creatures[0].Network = NetworkReader.readFrom(networkFileAdress)
-		networkName = creatures[0].Network.name
-
 		print("---------------------------------")
 		print("----------NEW ITERATION----------")
 		print("-----------number: ", iteration, "-------------")
 		print("---------------------------------")
+
 		time.sleep(1)
 
-		for creature in creatures:
-			creature.life = 10
-
 		# Run creatures
-		creaturesPlaying = creatures
-		ShuffleCreaturesPlaying()
-		Play(True)
+		playIteration = 0
+		while playIteration != Population_Size:
+			creaturesPlaying = creatures[0 + playIteration:10 + playIteration]
+			playIteration += 10
+			positions = GetRandomPositions()
+			for i in range(Plays_Count):
+				for j in range(len(creaturesPlaying)):
+					creaturesPlaying[j].x = positions[(j + i)%len(creaturesPlaying)][0]
+					creaturesPlaying[j].y = positions[(j + i)%len(creaturesPlaying)][1]
+				Play(True)
 
-		# Finding the best
-		'''bestScore = 0
+		# Getting average score and some data for averageFile
+		allScore = 0
 		for creature in creatures:
-			if bestScore < creature.score:
-				bestScore = creature.score'''
+			creature.score /= Plays_Count
+			allScore += creature.score
+		allScore /= len(creatures)
 		creatures.sort(key=CreaturesScoresComparator, reverse=True)
-		print("Best score:", creatures[0].score)
-		for creature in creatures:
-			if creature.Network.name == networkName:
-				print("NN score: ", creature.score, " Name: ", creature.Network.name)
-				break
+
+		# Finding the best and save it in case of beating record
+		bestCreature = creatures[0]
+		print("Best score:", bestCreature.score)
+		graphFile = open(graphFileAdress, 'a')
+		graphFile.write(str(iteration))
+		graphFile.write(';')
+		graphFile.write(str(bestCreature.score))
+		graphFile.write('\n')
+		graphFile.close()
+		if scoreRecord < bestCreature.score:
+			scoreRecord = bestCreature.score
+			NetworkWriter.writeToFile(bestCreature.Network, bestBotFileAdress)
+
+		# Graphing average
+		print("Average score:", allScore)
+		graphFile = open(averageFileAdress, 'a')
+		graphFile.write(str(iteration))
+		graphFile.write(';')
+		graphFile.write(str(allScore))
+		graphFile.write('\n')
+		graphFile.close()
+
+		# Opening graph program
+		if iteration == 0: _thread.start_new_thread(grapherThread, ())
+
+		# Getting half-final
+		halfFinal = []
+		random.shuffle(creatures)
+		scoresSum = 0
+		for creature in creatures: scoresSum += creature.score
+		for creature in creatures: creature.passProbability = creature.score / scoresSum
+		# Adding relying on probability
+		i = 0
+		isPassed = [False for i in range(Population_Size)]
+		while len(halfFinal) != Population_Size / 2:
+			if not creatures[i % Population_Size].passProbability > random.random() and isPassed[i % Population_Size] == False:
+				halfFinal.append(creatures[i % Population_Size])
+				isPassed[i % Population_Size] = True
+			i = random.randint(0, Population_Size)
+
+		# Breeding new generation
+		newGeneration = []
+		while len(newGeneration) != Population_Size:
+			newGeneration.append(Breed(random.choice(halfFinal), random.choice(halfFinal)))
+
+		# Replace old generation to young
+		del creatures
+		creatures = newGeneration
+		iteration += 1
 
 '''bestCreature.x = random.randint(0, width - 1)
 bestCreature.y = random.randint(0, height - 1)

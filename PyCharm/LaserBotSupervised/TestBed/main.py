@@ -1,3 +1,4 @@
+import copy
 import random
 import time
 
@@ -7,7 +8,9 @@ from pybrain.tools.shortcuts import buildNetwork
 from pybrain.tools.customxml.networkwriter import NetworkWriter
 from pybrain.tools.customxml.networkreader import NetworkReader
 
-networkFileAdress = '/media/sf_Python/PyCharm/LaserBotNeural2/BestLazerBot15.xml'
+import FinderBot
+
+networkFileAdress = '/media/sf_Python/PyCharm/LaserBotSupervised/BestSupervised'
 
 matrix = []
 width = 20
@@ -15,10 +18,11 @@ height = 12
 creaturesPlaying = []
 creatures = []
 shoots = []
-moves = ["go_up", "go_down", "go_right", "go_left", "fire_up", "fire_down", "fire_left", "fire_right"]
+commands = ["go_right", "go_left", "go_up", "go_down", "fire_right", "fire_left", "fire_up", "fire_down"]
 scoreRecord = 0
 Population_Size = 1500  # Must be dividable by 10
-InputLayerSize = 6 * (width + height - 4) + 9
+InputLayerSize = 45
+networkName = ''
 
 def IsEmpty(x, y):
 	if not IsAviable(x, y):
@@ -33,50 +37,21 @@ def IsAviable(x, y):
 		return False
 	return True
 
-
-def AnalizeCeil(x, y, field):
-	if IsAviable(x, y):
-		if field[x][y] == '|' or field[x][y] == '--':
-			return 0
-		else:
-			return field[x][y]
-	else:
-		return -10
-
 def FormatData(x, y, field):
-	data = []
-	# Middle
-	for i in range(3):
-		for j in range(3):
-			cX = i - 1 + x
-			cY = j - 1 + y
-			data.append(AnalizeCeil(cX, cY, field))
-	# Up
-	for i in range(3):
-		for j in range(height - 2):
-			cX = i - 1 + x
-			cY = - j - 2 + y
-			data.append(AnalizeCeil(cX, cY, field))
-	# Down
-	for i in range(3):
-		for j in range(height - 2):
-			cX = i - 1 + x
-			cY = j + 2 + y
-			data.append(AnalizeCeil(cX, cY, field))
-	# Left
-	for i in range(width - 2):
-		for j in range(3):
-			cX = - i - 2 + x
-			cY = j - 1 + y
-			data.append(AnalizeCeil(cX, cY, field))
-	# Right
-	for i in range(width - 2):
-		for j in range(3):
-			cX = i + 2 + x
-			cY = j - 1 + y
-			data.append(AnalizeCeil(cX, cY, field))
-	return data
 
+	data = [x, y, field[x][y]]
+	for i in range(width):
+		for j in range(height):
+			if field[i][j] != 0 and not (i == x and j==y):
+				data.append(i - x)
+				data.append(j - y)
+				data.append(field[i][j])
+
+	while len(data) != InputLayerSize:
+		data.append(0)
+		data.append(-1)
+		data.append(-1)
+	return data
 
 class Creature:
 	x = y = -1
@@ -86,10 +61,11 @@ class Creature:
 	shootingMove = False
 	Network = 0
 	passingProbability = 0
+	decision = ''
 
 	def __init__(self, Network=0):
 		if Network == 0:
-			self.Network = buildNetwork(int(InputLayerSize), int(InputLayerSize / 2), 8, hiddenclass=SigmoidLayer,
+			self.Network = buildNetwork(int(InputLayerSize), int(InputLayerSize), 8, hiddenclass=SigmoidLayer,
 										outclass=SigmoidLayer, bias=True)
 		else:
 			self.Network = Network
@@ -102,23 +78,35 @@ class Creature:
 		return self.Network.params
 
 	def make_choice(self, x, y, field):
-		data = FormatData(x, y, field)
 
-		outputs = self.Network.activate(data)
-		maxValue = -1
-		maxValueIndex = -1
-		for i in range(len(outputs)):
-			if outputs[i] > maxValue:
-				maxValue = outputs[i]
-				maxValueIndex = i
-		return moves[maxValueIndex]
+		if self.Network._name == 'SupervisedNetwork':
+			data = FormatData(x, y, field)
+
+			outputs = self.Network.activate(data)
+			maxValue = -1
+			maxValueIndex = -1
+			for i in range(len(outputs)):
+				if outputs[i] > maxValue:
+					maxValue = outputs[i]
+					maxValueIndex = i
+			return commands[maxValueIndex]
+		else:
+			return FinderBot.make_choice(x, y, field)
 
 
 	def AskChoice(self):
 		if self.life < 1:
 			return
 
-		choice = self.make_choice(self.x, self.y, matrix)
+		_field = copy.deepcopy(matrix)
+
+		# Pre-format
+		for i in range(width):
+			for j in range(height):
+				if _field[i][j] == '|' or _field[i][j] == '--':
+					_field[i][j] = 0
+
+		choice = self.make_choice(self.x, self.y, _field)
 		if choice == "go_up" or choice == "go_down" or choice == "go_left" or choice == "go_right":
 			self.shootingMove = False
 		else:
@@ -168,7 +156,7 @@ def DrawMatrix():
 		if IsAviable(creature.x, creature.y):
 			matrix[creature.x][creature.y] = creature.life
 
-def CreaturesMovesComparator(a):
+def CreaturescommandsComparator(a):
 	if not a.shootingMove:  # like moving is less than shooting
 		return 0
 	return 1
@@ -192,8 +180,8 @@ def Run():
 	for creature in creaturesPlaying:
 		creature.AskChoice()
 
-	random.shuffle(creaturesPlaying)
-	creaturesPlaying.sort(key=CreaturesMovesComparator)
+	#random.shuffle(creaturesPlaying)
+	creaturesPlaying.sort(key=CreaturescommandsComparator)
 
 	for creature in creaturesPlaying:
 		creature.Run()
@@ -215,10 +203,14 @@ def Play(printing=True):
 		if printing:
 			for i in range(height):
 				for j in range(width):
-					if i == creatures[0].y and j == creatures[0].x:
-						print('*', end=' ')
+					needContinue = 0
+					for creature in creatures:
+						if creature.Network.name == networkName:
+							if i == creature.y and j == creature.x:
+								print('*', end=' ')
+								needContinue = 1
+					if needContinue:
 						continue
-
 
 					if matrix[j][i] == "--":  # print("\33[41m", matrix[j][i], "\33[0m",  ' ',end='')
 						print(matrix[j][i], end='')  # print( matrix[j][i], end=' ')
@@ -229,9 +221,10 @@ def Play(printing=True):
 				print(end='\n')
 			print(end='\n')
 
-		time.sleep(0.001)
+		time.sleep(0.3)
 		iteration += 1
-		if iteration == 50:
+		if iteration == 30:
+			print("--------iteration ended----------")
 			break
 
 def ShuffleCreaturesPlaying():
@@ -246,7 +239,6 @@ def ShuffleCreaturesPlaying():
 if __name__ == "__main__":
 
 	iteration = 0
-	networkName = ''
 	while True:
 
 		creatures.clear()
@@ -281,7 +273,6 @@ if __name__ == "__main__":
 			if creature.Network.name == networkName:
 				print("NN score: ", creature.score, " Name: ", creature.Network.name)
 				break
-
 '''bestCreature.x = random.randint(0, width - 1)
 bestCreature.y = random.randint(0, height - 1)
 bestCreature.score = 0
