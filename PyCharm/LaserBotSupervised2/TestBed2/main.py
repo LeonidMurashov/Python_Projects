@@ -10,7 +10,7 @@ from pybrain.tools.customxml.networkreader import NetworkReader
 
 import FinderBot
 
-networkFileAdress = '/media/sf_Python/PyCharm/LaserBotSupervised/BestSupervised'
+networkFileAdress = '/media/sf_Python/PyCharm/LaserBotSupervised2/BestSupervised'
 
 matrix = []
 width = 20
@@ -21,7 +21,7 @@ shoots = []
 commands = ["go_right", "go_left", "go_up", "go_down", "fire_right", "fire_left", "fire_up", "fire_down"]
 scoreRecord = 0
 Population_Size = 1500  # Must be dividable by 10
-InputLayerSize = 45
+InputLayerSize = 4
 networkName = ''
 
 def IsEmpty(x, y):
@@ -38,19 +38,11 @@ def IsAviable(x, y):
 	return True
 
 def FormatData(x, y, field):
-
-	data = [x, y, field[x][y]]
+	data = []
 	for i in range(width):
 		for j in range(height):
-			if field[i][j] != 0 and not (i == x and j==y):
-				data.append(i - x)
-				data.append(j - y)
-				data.append(field[i][j])
-
-	while len(data) != InputLayerSize:
-		data.append(0)
-		data.append(-1)
-		data.append(-1)
+			if field[i][j] != 0 and not (i == x and j == y):
+				data.append([[field[x][y], abs(i - x), abs(j - y), field[i][j]], [x, y]])
 	return data
 
 class Creature:
@@ -82,17 +74,16 @@ class Creature:
 		if self.Network._name == 'SupervisedNetwork':
 			data = FormatData(x, y, field)
 
-			outputs = self.Network.activate(data)
+			outputs = [self.Network.activate(d[0]) for d in data]
 			maxValue = -1
 			maxValueIndex = -1
 			for i in range(len(outputs)):
 				if outputs[i] > maxValue:
 					maxValue = outputs[i]
 					maxValueIndex = i
-			return commands[maxValueIndex]
+			return FinderBot.GoToPoint(x, y, data[maxValueIndex][1][0], data[maxValueIndex][1][1])
 		else:
 			return FinderBot.make_choice(x, y, field)
-
 
 	def AskChoice(self):
 		if self.life < 1:
@@ -221,7 +212,7 @@ def Play(printing=True):
 				print(end='\n')
 			print(end='\n')
 
-		#time.sleep(0)
+		time.sleep(0.3)
 		iteration += 1
 		if iteration == 30:
 			print("--------iteration ended----------")

@@ -62,9 +62,6 @@ def RunCommand(x, y, score, command, field, life):
 	score += 1
 	return x, y, score, field, life
 
-def Delme(field):
-	field[1][1] = 0
-
 def Rec(iteration, x, y, score, field, life):
 	if iteration > 4 or life < 1:
 		return score

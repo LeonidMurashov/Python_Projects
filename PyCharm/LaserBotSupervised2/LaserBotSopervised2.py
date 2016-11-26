@@ -7,22 +7,15 @@ from pybrain.datasets import SupervisedDataSet
 from pybrain.supervised.trainers import BackpropTrainer
 width = 0
 height = 0
-InputLayerSize = 45
+InputLayerSize = 4
 commands = ["go_right", "go_left", "go_up", "go_down", "fire_right", "fire_left", "fire_up", "fire_down"]
 
 def FormatData(x, y, field):
-	data = [x, y, field[x][y]['life']]
+	data = []
 	for i in range(width):
 		for j in range(height):
-			if field[i][j] != 0 and not (i == x and j==y):
-				data.append(i - x)
-				data.append(j - y)
-				data.append(field[i][j]['life'])
-
-	while len(data) != InputLayerSize:
-		data.append(0)
-		data.append(-1)
-		data.append(-1)
+			if field[i][j] != 0 and not (i == x and j == y):
+				data.append([field[x][y]['life'], abs(i - x), abs(j - y), field[i][j]['life']])
 	return data
 
 if __name__ == "__main__":
@@ -43,39 +36,34 @@ if __name__ == "__main__":
 
 		fieldData = FormatData(player[0], player[1], field)
 		num = 0
-		for num in range(len(commands)):
-			if decisionRaw == commands[num]:
-				break
-		decision = [0, 0, 0, 0, 0, 0, 0, 0]
-		decision[num] = 1
 
-		features.append([fieldData, decision])
+		for playerData in fieldData:
+			isTrue = 0
+			if player[0] < playerData[1] and decisionRaw[-4:] == 'left' or player[0] > playerData[1] and decisionRaw[-4:] == 'ight' or player[1] < playerData[2] and decisionRaw[-4:] == 'down' or player[1] > playerData[2] and decisionRaw[-2:] == 'up':
+				isTrue = 1
+			features.append([playerData, isTrue])
 
-	dataSet = SupervisedDataSet(InputLayerSize, 8)
+	dataSet = SupervisedDataSet(InputLayerSize, 1)
 	for feature in features:
 		dataSet.addSample(feature[0], feature[1])
 
-	Network = buildNetwork(dataSet.indim, InputLayerSize*2, InputLayerSize*2, 8, hiddenclass=SigmoidLayer, outclass=SigmoidLayer, bias=True)
+	Network = buildNetwork(dataSet.indim, InputLayerSize * 2, InputLayerSize * 2, 1, hiddenclass=SigmoidLayer, outclass=SigmoidLayer, bias=True)
 	trainer = BackpropTrainer(Network, dataSet, learningrate=0.001, momentum=0.001)
+
 	trainer.trainUntilConvergence()
-	#trainer.trainEpochs(10000)
-	
+
+
 	rightAnswers = 0
 	for feature in features:
 		outputs = Network.activate(feature[0])
 
 		maxValue = -1
 		maxValueIndex = -1
-		for i in range(len(outputs)):
-			if outputs[i] > maxValue:
-				maxValue = outputs[i]
-				maxValueIndex = i
-		if feature[1][maxValueIndex] == 1:
+		if outputs[0] > 0.5 and feature[1] == 1:
 			rightAnswers += 1
 
-		printOutputs = [int(output*10)/10 for output in outputs]
-		print(printOutputs, feature[1], feature[1][maxValueIndex] == 1)
+		print(outputs[0], feature[1], outputs[0] > 0.5 and feature[1] == 1)
 
-	print('Right answers: ', rightAnswers/len(features) * 100, "%")
+	print('Right answers: ', rightAnswers / len(features) * 100, "%")
 	Network._name = 'SupervisedNetwork'
 	NetworkWriter.writeToFile(Network, "BestSupervised")

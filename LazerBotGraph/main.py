@@ -37,6 +37,7 @@ def Hit(x, y, field, command):
 
 def RunCommand(x, y, score, command, field, life):
     if command == "go_left" or command == "go_up" or command == "go_down" or command == "go_right":
+        lastXY = [x, y]
         field[x][y] = 0
         if command == "go_up":
             if IsEmpty(x, y - 1, field): y -= 1
@@ -47,23 +48,21 @@ def RunCommand(x, y, score, command, field, life):
         else:
             if IsEmpty(x + 1, y, field): x += 1
         field[x][y] = {'life' : life}
+        if lastXY[0] == x and lastXY[1] == y:
+            score -= 2
     else:
         hit, field = Hit(x, y, deepcopy(field), command)
         if hit:
             score += 20
 
-    life -= fireZones[x][y]
-    score -= sightZones[x][y]*1
+    life -= 2*fireZones[x][y] + sightZones[x][y]
+    #score -= sightZones[x][y]*1
     # For life bot
     score += 1
-    # TODO life cycle
     return x, y, score, field, life
 
-def Delme(field):
-    field[1][1] = 0
-
 def Rec(iteration, x, y, score, field, life):
-    if iteration > 4 or life < 1:
+    if iteration > 2 or life < 1:
         return score
     # Do iteration
     maxScore = 0
@@ -113,16 +112,27 @@ def BuildFireZones(field, x, y):
                 if direction != [0, 0]:
                     dx = i + direction[0]
                     dy = j + direction[1]
-                    while IsAviable(dx, dy):
+                    while IsAviable(dx, dy) and ((dx - direction[0] == i and dy - direction[1] == j) or IsEmpty(dx - direction[0], dy - direction[1], field)):
                         fireZones[dx][dy] += 1
                         dx += direction[0]
                         dy += direction[1]
 
                 # Creating views matrix
-                for k in range(width):
+                for k in range(i+1, width):
+                    if not IsAviable(k, j): break
                     sightZones[k][j] += 1
-                for o in range(height):
+                    if field[k][j] != 0: break
+                for k in range(0, i+1):
+                    sightZones[k][j] += 1
+                    if field[k][j] != 0: break
+
+                for o in range(j+1, height):
+                    if not IsAviable(i, o): break
                     sightZones[i][o] += 1
+                    if field[i][o] != 0: break
+                for o in range(0, j+1):
+                    sightZones[i][o] += 1
+                    if field[i][o] != 0: break
 
 
 def make_choice(x, y, field):
@@ -147,4 +157,5 @@ if __name__ == "__main__":
     field[9][19] = anLife
     field[2][3] = anLife
     print(make_choice(5, 15, field))
+    a = 5
     #print(make_choice(1, 2, [ [0, 0, 0, 0, 0], [0, 0, myLife, 0, 0], [0, 0, anLife, 0, 0], [0, 0, anLife, 0, 0], [0, 0, anLife, 0, 0], [0, 0, anLife, 0, 0], [0, 0, anLife, 0, 0] ] ))
