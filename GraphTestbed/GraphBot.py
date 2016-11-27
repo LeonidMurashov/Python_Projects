@@ -152,7 +152,7 @@ def make_choice(x, y, field):
         history.pop(len(history) - 1)
         sameMovesCount = 1
         if lastMove[0] == 'f':
-            while history[len(history) - 1] == lastMove:
+            while len(history) != 0 and history[len(history) - 1] == lastMove:
                 sameMovesCount += 1
                 history.pop(len(history) - 1)
 
