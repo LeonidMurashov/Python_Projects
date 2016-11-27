@@ -4,6 +4,11 @@ import time
 
 import FinderBot
 import GraphBot
+import YuraBot
+
+botLifes = 100
+katkaTime = botLifes*3
+botCount = 10
 
 networkFileAdress = '/media/sf_Python/PyCharm/LaserBotSupervised2/BestSupervised'
 
@@ -65,7 +70,7 @@ class Creature:
         if self.graph:
             return GraphBot.make_choice(x, y, field)
         else:
-            return FinderBot.make_choice(x, y, field)
+            return YuraBot.make_choice(x, y, field)
 
     def AskChoice(self, field):
         if self.life < 1:
@@ -74,20 +79,21 @@ class Creature:
         choice = self.make_choice(self.x, self.y, field)
         self.history.append(choice)
 
-        if choice[0] == 'g':
-            self.shootingMove = False
-        else:
+        if choice[0] == 'f':
             self.shootingMove = True
+        else:
+            self.shootingMove = False
 
         if choice == "go_up" or choice == "fire_up":
             self.direction = [0, -1]
-        if choice == "go_down" or choice == "fire_down":
+        elif choice == "go_down" or choice == "fire_down":
             self.direction = [0, 1]
-        if choice == "go_left" or choice == "fire_left":
+        elif choice == "go_left" or choice == "fire_left":
             self.direction = [-1, 0]
-        if choice == "go_right" or choice == "fire_right":
+        elif choice == "go_right" or choice == "fire_right":
             self.direction = [1, 0]
-
+        else:
+            self.direction = [0, 0]
     def Run(self):
         if self.life < 1:
             self.x = -1
@@ -147,8 +153,9 @@ def Run():
     # Prepare data
     field = [[0 for i in range(int(height))] for j in range(int(width))]
     for cre in creaturesPlaying:
-        data = {'life': copy.deepcopy(cre.life), 'history': copy.deepcopy(cre.history)}
-        field[cre.x][cre.y] = data
+        if cre.life > 0:
+            data = {'life': copy.deepcopy(cre.life), 'history': copy.deepcopy(cre.history)}
+            field[cre.x][cre.y] = data
 
     for creature in creaturesPlaying:
         creature.AskChoice(field)
@@ -200,7 +207,7 @@ def Play(printing=True):
 
         #time.sleep(0.3)
         iteration += 1
-        if iteration == 30:
+        if iteration == katkaTime:
             print("--------iteration ended----------")
             break
 
@@ -218,11 +225,11 @@ if __name__ == "__main__":
     iteration = 0
     finderScores = 0
     netScores = 0
-    while iteration < 10:
+    while iteration < 1:
 
         creatures.clear()
         # Creating generation
-        for i in range(10):
+        for i in range(botCount):
             creatures.append(Creature())
         creatures[0] = Creature(1)
 
@@ -233,7 +240,7 @@ if __name__ == "__main__":
         #time.sleep(1)
 
         for creature in creatures:
-            creature.life = 10
+            creature.life = botLifes
 
         # Run creatures
         creaturesPlaying = creatures
