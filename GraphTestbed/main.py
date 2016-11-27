@@ -42,7 +42,7 @@ def FormatData(x, y, field):
 
 class Creature:
     x = y = -1
-    life = 100
+    life = 0
     score = 0
     direction = []
     shootingMove = False
@@ -256,6 +256,8 @@ if __name__ == "__main__":
                 graphPlace = i
             else: finderScores += creature.score
             i += 1
+
+        print("Graph place:", graphPlace)
         iteration += 1
 
     print()
