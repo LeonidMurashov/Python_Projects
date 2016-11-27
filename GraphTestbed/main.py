@@ -78,6 +78,14 @@ class Creature:
 
         choice = self.make_choice(self.x, self.y, field)
         self.history.append(choice)
+        exists = False
+        for command in commands:
+            if command == choice:
+                exists = True
+
+        if not exists:
+            print(choice)
+            a = 5/0
 
         if choice[0] == 'f':
             self.shootingMove = True

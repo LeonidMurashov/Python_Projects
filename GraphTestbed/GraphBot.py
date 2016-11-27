@@ -4,6 +4,7 @@ from copy import deepcopy
 lifesFileAdress = './bots/$$$LeonidTheKiller$$$_lifes.m'
 dodgeFileAdress = './bots/$$$LeonidTheKiller$$$_dodge.m'
 idlingFileAdress = './bots/$$$LeonidTheKiller$$$_idling.m'
+allLifesFileAdress = './bots/$$$LeonidTheKiller$$$_fullLifes.m'
 LifeMaximum = 100
 
 ########################################################
@@ -266,8 +267,18 @@ def ClearFiles():
 	idlingFile.write('')
 	idlingFile.close()
 
+def ReadAllLifes():
+	allLifesFile = open(allLifesFileAdress, 'r')
+	text = allLifesFile.read()
+	return int(text)
+
+def WriteAllLifes(life):
+	idlingFile = open(allLifesFileAdress, 'w+')
+	idlingFile.write(str(life))
+	idlingFile.close()
+
 def make_choice(x, y, field):
-	global height, width, time, fireZones, sightZones
+	global height, width, time, fireZones, sightZones, LifeMaximum
 	# Filling with nils
 	height = len(field[0])
 	width = len(field)
@@ -277,7 +288,8 @@ def make_choice(x, y, field):
 
 	if time == 0 or time == 1:
 		ClearFiles()
-
+		WriteAllLifes(life)
+	LifeMaximum = ReadAllLifes()
 	'''if len(field[x][y]['history']) > 0:
 		history = deepcopy(field[x][y]['history'])
 		lastMove = history[len(history) - 1]
@@ -300,52 +312,55 @@ def make_choice(x, y, field):
 				if (minDistance == 0 and not (i == x and j == y)) or minDistance == 1 or minDistance == 2:
 					closeCreatures.append([i, j, field[i][j]])
 
-	idlingList = ReadIdlingCoordinates()
 	newField = deepcopy(field)
-	for creature in closeCreatures:
-		if not IsAnyShootable(creature[0], creature[1], field):
-			# Checking for idling on the same place ############## tut oshibka
-			similarities = 0
-			i = 0
-			while i < len(idlingList):
-				if time - idlingList[i]['time'] > 10:
-					idlingList.pop(i)
-					continue
-				if idlingList[i]['coordinates'] == [creature[0], creature[1]]:
-					similarities += 1
-				i += 1
+	if not IsAnyShootable(x, y, field):
+		idlingList = ReadIdlingCoordinates()
+		for creature in closeCreatures:
+			if field[x][y]['life'] <= creature[2]['life']:
+				if not IsAnyShootable(creature[0], creature[1], field):
+					# Checking for idling on the same place
+					similarities = 0
+					i = 0
+					while i < len(idlingList):
+						if time - idlingList[i]['time'] > 10:
+							idlingList.pop(i)
+							continue
+						if idlingList[i]['coordinates'] == [creature[0], creature[1]]:
+							similarities += 1
+						i += 1
 
-			if similarities < 3:
-				# Do finder step
-				choice = make_choice_Finder(creature[0], creature[1], field)
-				if choice[0] == 'g':
-					direction = GetCommandDirection(choice)
-					if IsAviable(creature[0] + direction[0],creature[1] + direction[1]):
-						newField[creature[0] + direction[0]][creature[1] + direction[1]] = deepcopy(newField[creature[0]][creature[1]])
-						newField[creature[0]][creature[1]] = 0
-				idlingList.append({'time' : time, 'coordinates' : [creature[0], creature[1]]})
-	WriteIdlingCoordinates(idlingList)
+					if similarities < 3:
+						# Do finder step
+						choice = make_choice_Finder(creature[0], creature[1], field)
+						if choice[0] == 'g':
+							direction = GetCommandDirection(choice)
+							if IsAviable(creature[0] + direction[0],creature[1] + direction[1]):
+								newField[creature[0] + direction[0]][creature[1] + direction[1]] = deepcopy(newField[creature[0]][creature[1]])
+								newField[creature[0]][creature[1]] = 0
+						idlingList.append({'time' : time, 'coordinates' : [creature[0], creature[1]]})
+		WriteIdlingCoordinates(idlingList)
 
 	# Ban life trading
 	lifeList = ReadAndWriteLife(life)
 	banFires = False
-	if (lifeList[0] - lifeList[len(lifeList)-1] > 2 or field[x][y]['life'] < 3 and lifeList[0] - lifeList[len(lifeList)-1] > 1) and not len(closeCreatures) == 1:
+	if (lifeList[0] - lifeList[len(lifeList)-1] > 3 or field[x][y]['life'] < 3 and lifeList[0] - lifeList[len(lifeList)-1] > 1) and not len(closeCreatures) == 1:
 		banFires = True
 
 	# Dodging single enemy
 	if len(closeCreatures) == 1 and IsAnyShootable(x, y, field):
-		similarities = 0
-		dodgeList = ReadDodgeCoordinates()
-		for i in range(len(dodgeList)):
-			if time - dodgeList[i]['time'] < 10 and dodgeList[i]['coordinates'] == [closeCreatures[0][0], closeCreatures[0][1]]:
-				similarities += 1
+		if field[x][y]['life'] <= closeCreatures[0][2]['life']:
+			similarities = 0
+			dodgeList = ReadDodgeCoordinates()
+			for i in range(len(dodgeList)):
+				if time - dodgeList[i]['time'] < 10 and dodgeList[i]['coordinates'] == [closeCreatures[0][0], closeCreatures[0][1]]:
+					similarities += 1
 
-		if similarities < 3:
-			# Starting dodging
-			banFires = True
-			dodgeList.append({'time' : time, 'coordinates' : [closeCreatures[0][0], closeCreatures[0][1]]})
-			WriteDodgeCoordinates(dodgeList)
-			#print("IT DODGES")
+			if similarities < 3:
+				# Starting dodging
+				banFires = True
+				dodgeList.append({'time' : time, 'coordinates' : [closeCreatures[0][0], closeCreatures[0][1]]})
+				WriteDodgeCoordinates(dodgeList)
+				#print("IT DODGES")
 
 	if len(closeCreatures) == 0:
 		return make_choice_Finder(x, y, newField)
