@@ -195,12 +195,12 @@ def Play(printing=True):
 
             for creature in creatures:
                 if creature.graph == 1:
-                    print("Graph life:", creature.life)
+                    print("Graph life:", creature.life, "Graph score:", creature.score)
             print(end='\n')
 
         #time.sleep(0.3)
         iteration += 1
-        if iteration == 300:
+        if iteration == 30:
             print("--------iteration ended----------")
             break
 
@@ -218,7 +218,7 @@ if __name__ == "__main__":
     iteration = 0
     finderScores = 0
     netScores = 0
-    while iteration < 1:
+    while iteration < 10:
 
         creatures.clear()
         # Creating generation
@@ -233,7 +233,7 @@ if __name__ == "__main__":
         #time.sleep(1)
 
         for creature in creatures:
-            creature.life = 100
+            creature.life = 10
 
         # Run creatures
         creaturesPlaying = creatures
