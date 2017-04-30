@@ -1,0 +1,4 @@
+
+
+
+mas = map(int, input())

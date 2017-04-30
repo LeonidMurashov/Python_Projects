@@ -1,0 +1,7 @@
+#PYTHON ignores
+#ipch/
+*.opendb
+*.opensdf
+*.LEO-PC
+*.npy
+*.data-00000-of-00001
