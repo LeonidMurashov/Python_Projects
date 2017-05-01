@@ -5,15 +5,17 @@ from alexnet import alexnet
 from screen_consts import WIDTH, HEIGHT
 LR = 1e-2
 EPOCHS = 20
-MODEL_NAME = 'wormax-worm6-{}-{}-{}-epochs-120K-data.model'.format(LR, 'alexnetv2',EPOCHS)
+MODEL_NAME = 'models/wormax-worm6-{}-{}-{}-epochs-120K-data.model'.format(LR, 'alexnetv2',EPOCHS)
 
 model = alexnet(WIDTH, HEIGHT, LR)
+folder = 'learn_data_colored/'
+batch_size = 40
 
 for i in range(EPOCHS):
     train_data = np.load('training_data_balanced.npy')
 
-    train = train_data[:-6000]
-    test = train_data[-6000:]
+    train = train_data[:-(batch_size//15)*1000] # 7.5% of data
+    test = train_data[-(batch_size//15)*1000:]
 
     X = np.array([i[0] for i in train]).reshape(-1,WIDTH,HEIGHT,1)
     Y = [i[1] for i in train]

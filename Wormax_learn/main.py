@@ -31,7 +31,7 @@ def mouse_up(x, y):
 
 LR = 1e-2
 EPOCHS = 20
-MODEL_NAME = 'wormax-worm5.1-{}-{}-{}-epochs-73K-data.model'.format(LR, 'alexnetv2',EPOCHS)
+MODEL_NAME = 'models/wormax-worm6-{}-{}-{}-epochs-120K-data.model'.format(LR, 'alexnetv2',EPOCHS)
 
 model = alexnet(WIDTH, HEIGHT, LR)
 model.load(MODEL_NAME)

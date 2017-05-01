@@ -13,7 +13,7 @@ from screen_consts import WIDTH, HEIGHT
 isPressed = False
 samples_count = 0
 
-folder = 'learn_data/'
+folder = 'learn_data_colored/'
 samples_in_file = 1000
 training_data = []
 
@@ -21,7 +21,7 @@ def roi(img, vertices):
 	# blank mask:
 	mask = np.zeros_like(img)
 	# filling pixels inside the polygon defined by "vertices" with the fill color
-	cv2.fillPoly(mask, vertices, 255)
+	cv2.fillPoly(mask, vertices, (255,255,255))
 	# returning the image only where mask pixels are nonzero
 	masked = cv2.bitwise_and(img, mask)
 	return masked
@@ -40,7 +40,7 @@ for fname in os.listdir(folder):
 	else:
 		samples_count += len(arr)
 print("Samples found ", samples_count)
-print(np.shape(training_data))
+#print(np.shape(training_data))
 def main():
 	global training_data, samples_count
 
@@ -54,9 +54,9 @@ def main():
 						 ], np.int32)
 
 	paused = True
-	print("Press T to pause/unpause")
+	print("Press T to start (and pause/unpause)")
 	while True:
-		img = cv2.cvtColor(cv2.resize(grab_screen(region=(0, 125, 1000, 725)),(WIDTH,HEIGHT)), cv2.COLOR_RGB2GRAY)
+		img = cv2.cvtColor(cv2.resize(grab_screen(region=(0, 125, 1000, 725)),(WIDTH,HEIGHT)), cv2.COLOR_BGR2RGB)
 		img = roi(img,[vertices])
 		#cv2.imshow("SCREEN", screen)
 	   # time.sleep(0.1)
