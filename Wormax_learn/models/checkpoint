@@ -1,2 +1,2 @@
-model_checkpoint_path: "D:\\Python\\Wormax_learn\\wormax-worm6-0.01-alexnetv2-20-epochs-120K-data.model"
-all_model_checkpoint_paths: "D:\\Python\\Wormax_learn\\wormax-worm6-0.01-alexnetv2-20-epochs-120K-data.model"
+model_checkpoint_path: "D:\\Python\\Wormax_learn\\models\\wormax-binary-worm8-0.005-alexnetv2-20-epochs-178K-data.model"
+all_model_checkpoint_paths: "D:\\Python\\Wormax_learn\\models\\wormax-binary-worm8-0.005-alexnetv2-20-epochs-178K-data.model"

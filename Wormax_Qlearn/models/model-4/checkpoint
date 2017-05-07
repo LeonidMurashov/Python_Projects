@@ -1,0 +1,6 @@
+model_checkpoint_path: "D:/Python/Wormax_Qlearn/models/model-4/qlearning.ckpt-12000"
+all_model_checkpoint_paths: "D:/Python/Wormax_Qlearn/models/model-4/qlearning.ckpt-4000"
+all_model_checkpoint_paths: "D:/Python/Wormax_Qlearn/models/model-4/qlearning.ckpt-6000"
+all_model_checkpoint_paths: "D:/Python/Wormax_Qlearn/models/model-4/qlearning.ckpt-8000"
+all_model_checkpoint_paths: "D:/Python/Wormax_Qlearn/models/model-4/qlearning.ckpt-10000"
+all_model_checkpoint_paths: "D:/Python/Wormax_Qlearn/models/model-4/qlearning.ckpt-12000"

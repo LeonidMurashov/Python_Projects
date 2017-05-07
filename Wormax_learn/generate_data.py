@@ -8,7 +8,7 @@ from pynput.mouse import Listener
 from getkeys import key_check
 import os
 from threading import Thread
-from screen_consts import WIDTH, HEIGHT
+from screen_consts import WIDTH, HEIGHT, roi
 
 isPressed = False
 samples_count = 0
@@ -16,15 +16,6 @@ samples_count = 0
 folder = 'learn_data_colored/'
 samples_in_file = 1000
 training_data = []
-
-def roi(img, vertices):
-	# blank mask:
-	mask = np.zeros_like(img)
-	# filling pixels inside the polygon defined by "vertices" with the fill color
-	cv2.fillPoly(mask, vertices, (255,255,255))
-	# returning the image only where mask pixels are nonzero
-	masked = cv2.bitwise_and(img, mask)
-	return masked
 
 def on_click(x, y, button, pressed):
 	global isPressed
