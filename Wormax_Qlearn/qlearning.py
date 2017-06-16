@@ -43,7 +43,7 @@ merge_all_summaries = tf.summary.merge_all
 histogram_summary = tf.summary.histogram
 scalar_summary = tf.summary.scalar
 
-MODEL_NUMBER = 4
+MODEL_NUMBER = 6
 # Change that value to test instead of train
 testing = False
 # Model path (to load when testing)
@@ -309,7 +309,7 @@ def actor_learner_thread(thread_id, env, session, graph_ops, num_actions,
 					  (episode_ave_max_q/float(ep_t)),
 					  " Epsilon: %.5f" % epsilon, " Epsilon progress: %.6f" %
 					  (t/float(anneal_epsilon_timesteps)))
-				time.sleep(0.5)
+				time.sleep(0.75)
 				break
 
 

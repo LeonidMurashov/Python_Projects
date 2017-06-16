@@ -1,14 +1,15 @@
-import cv2
-import win32api, win32con
-import numpy as np
-from grabscreen import grab_screen
-import time
-from functools import partial
-from pynput.mouse import Listener
-from getkeys import key_check
 import os
+import time
+import win32api
+from functools import partial
 from threading import Thread
+import cv2
+import numpy as np
+from getkeys import key_check
+from grabscreen import grab_screen
+from pynput.mouse import Listener
 from screen_consts import WIDTH, HEIGHT, roi
+
 
 isPressed = False
 samples_count = 0
@@ -40,7 +41,6 @@ def main():
 		time.sleep(1)
 
 	thread = Thread(target=detect_clicks)
-	thread.start()
 	vertices = np.array([[0, 0], [WIDTH, 0], [WIDTH, HEIGHT],[WIDTH-85, HEIGHT],[WIDTH-85, HEIGHT-15],[WIDTH-105, HEIGHT-15],[WIDTH-105, HEIGHT], [0, HEIGHT],
 						 ], np.int32)
 

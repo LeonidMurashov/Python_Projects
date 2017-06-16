@@ -4,7 +4,8 @@ from grabscreen import grab_screen
 import win32api, win32con
 from getkeys import key_check
 import time
-from CV_helpfile import detect_lose, recognize_score
+from CV_helpfile import detect_lose, recognize_score, check_for_emergency, try_reboot_webgl
+from time import localtime, strftime
 
 def mouse_down(c):
 	win32api.SetCursorPos((c[0], c[1]))
@@ -51,6 +52,7 @@ class Environment:
 	actions = [ul, u, ur, l, r, dl, d, dr]#, ulp, up, urp, lp, rp, dlp, dp, drp]
 	last_score = 10
 	was_huge = 0
+	iteration = 0
 	def __init__(self):
 		pass
 
@@ -60,10 +62,12 @@ class Environment:
 	def step(self, action):
 
 		keys = key_check()
-		if 'T' in keys:
+		if 'T' in keys and 'ALT' in keys:
 			print("Paused!")
 			time.sleep(2)
-			while 'T' not in key_check():
+			keys = []
+			while not ('T' in keys and 'ALT' in keys):
+				keys = key_check()
 				time.sleep(0.01)
 			print("Unpaused!")
 			time.sleep(1)
@@ -79,17 +83,21 @@ class Environment:
 			else:
 				self.was_huge = 0
 				self.last_score = score
-		'''if abs(delta) > 20 and self.was_huge < 4 or score == 0:
-			delta = 0
-			self.was_huge += 1
-
-		else:
-			self.was_huge = 0'''
 
 		self.actions[action]()
-		img = roi(cv2.resize(img, (WIDTH, HEIGHT)), ROI_VERTICES)
-		lose = detect_lose(cv2.cvtColor(img,cv2.COLOR_BGR2RGB))
+		img = cv2.resize(img, (WIDTH, HEIGHT))
+		if self.iteration % 10 == 0:
+			if check_for_emergency(img):
+				print("Emergency pause! " + strftime("%Y-%m-%d %H:%M:%S", localtime()))
+				while check_for_emergency(img):
+					img = cv2.resize(grab_screen(region=GRAB_REGION), (WIDTH, HEIGHT))
+					try_reboot_webgl()
+					print("Try to reboot WebGL.")
+					time.sleep(2)
+				print("Emergency ended! Continue learning.")
 
+		img = roi(img, ROI_VERTICES)
+		lose = detect_lose(cv2.cvtColor(img,cv2.COLOR_BGR2RGB))
 		if lose:
 			mouse_up(coordinates_wrapper(0,0))
 			mouse_down(coordinates_wrapper(0,0))
@@ -97,6 +105,7 @@ class Environment:
 			self.last_score = 10
 		if delta:
 			print(delta)
+		self.iteration += 1
 		return cv2.cvtColor(img, cv2.COLOR_BGR2GRAY), delta, lose, False # s_t1, r_t, terminal, info =
 		#time.sleep(0.01)
 

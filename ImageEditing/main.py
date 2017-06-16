@@ -1,7 +1,7 @@
 from PIL import Image
 from math import ceil, sqrt
 from math import floor
-
+#https://habrahabr.ru/post/142818/
 def checkByte(a):
     if a > 255:
         a = 255

@@ -3,7 +3,7 @@ import os
 import numpy as np
 from alexnet import alexnet
 from screen_consts import WIDTH, HEIGHT
-from tensorflow.python.framework.errors import NotFoundError
+
 
 LR = 5e-3
 EPOCHS = 20

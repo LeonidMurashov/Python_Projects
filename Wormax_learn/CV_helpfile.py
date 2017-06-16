@@ -1,8 +1,7 @@
 import cv2
-from grabscreen import grab_screen
-from screen_consts import GRAB_REGION, WIDTH, HEIGHT, roi
 import numpy as np
-import time
+from screen_consts import WIDTH, HEIGHT, roi
+
 
 def bit_mask(img):
 	ret, th1 = cv2.threshold(img, 70, 255, cv2.THRESH_TOZERO)

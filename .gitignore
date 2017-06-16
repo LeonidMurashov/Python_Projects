@@ -5,3 +5,7 @@
 *.LEO-PC
 *.npy
 *.data-00000-of-00001
+*.meta
+*.h5
+*.csv
+*.bin

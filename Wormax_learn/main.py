@@ -1,12 +1,14 @@
-import cv2
-import win32api, win32con
-import numpy as np
-from grabscreen import grab_screen
 import time
-from getkeys import key_check
+import win32api
+import win32con
+import cv2
+import numpy as np
 from alexnet import alexnet
+from getkeys import key_check
+from grabscreen import grab_screen
 from CV_helpfile import bit_mask
 from screen_consts import GRAB_REGION, WIDTH, HEIGHT, max_x, max_y, min_x, min_y, ROI_VERTICES, roi, cx, cy, kx, ky
+
 
 
 def mouse_down(x,y):
