@@ -19,7 +19,7 @@ def mouse_up(x, y):
 
 LR = 1e-3
 EPOCHS = 20
-MODEL_NAME = 'models/wrm5-5e-04-20-ep-312K-data.model'
+MODEL_NAME = 'models/wrm6-1e-04-15-ep-1200K-data.model'
 n_classes = 12
 
 model = modified_alexnet(WIDTH, HEIGHT, 2, LR, n_classes)
@@ -47,7 +47,7 @@ while True:
 			print("action!")
 		time.sleep(1)
 	if "C" in keys:
-		offset = -40
+		offset = -45
 		mouse_up(scr_W//2, scr_H//2+offset)
 		mouse_down(scr_W//2, scr_H//2+offset)
 		mouse_up(scr_W//2, scr_H//2+offset)

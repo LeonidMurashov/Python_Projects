@@ -40,7 +40,7 @@ for i in range(len(data)):
 			continue
 
 		one_hot = get_one_hot(data[i][1][0], data[i][1][1], n_classes)
-		#data[i][1] = one_hot
+		data[i][1] = one_hot
 		classes[np.argmax(one_hot)] += 1
 
 	else:
@@ -60,7 +60,7 @@ balance_to = np.min(classes)
 print("Start balancing to", balance_to)
 dels_array.clear()
 for i, row in enumerate(data):
-	row_class = get_direction(row[1][0], row[1][1], n_classes)
+	row_class = np.argmax(row[1])# get_direction(row[1][0], row[1][1], n_classes)
 	if classes[row_class]-balance_to >= 1:
 		dels_array.append(i)
 		classes[row_class] -= 1
@@ -69,7 +69,7 @@ data = np.delete(data, dels_array, 0)
 print("Balanced len:", len(data))
 print("Overall deleted:", len_data - len(data))
 
-print("\nMultiplying dataset(x4)")
+'''print("\nMultiplying dataset(x4)")
 multiplied_data = []
 saved = 0
 classes = np.zeros_like(classes)
@@ -98,23 +98,23 @@ del data
 if len(multiplied_data) > 0:
 	np.save("preprocessed_data\\" + "preprocessed-{}-{}.npy".format(saved, saved+len(multiplied_data)), multiplied_data[0:len(multiplied_data)])
 	saved += len(multiplied_data)
+'''
 
-
-'''classes = np.zeros([n_classes])
-for i in multiplied_data:
+classes = np.zeros([n_classes])
+for i in data:
 	classes += i[1]
 	hot = np.argmax(i[1])
 	i[1][hot - 1] = 0.1
 	i[1][hot] = 0.8
-	i[1][(hot + 1) % n_classes] = 0.1'''
+	i[1][(hot + 1) % n_classes] = 0.1
 print("Final classes:", classes)
-print("Final len:", len(multiplied_data))
+print("Final len:", len(data))
 
-'''# Save by batches
+# Save by batches
 print("Start saving")
-for i in range(0, len(multiplied_data), BATCH_SIZE):
-	print(str(round(i/len(multiplied_data)*100)) + "% complete")
-	j = min(i + BATCH_SIZE, len(multiplied_data)-1)
-	np.save("preprocessed_data\\" + "preprocessed-{}-{}.npy".format(i, j), multiplied_data[i:j])'''
+for i in range(0, len(data), BATCH_SIZE):
+	print(str(round(i/len(data)*100)) + "% complete")
+	j = min(i + BATCH_SIZE, len(data)-1)
+	np.save("preprocessed_data\\" + "preprocessed-{}-{}.npy".format(i, j), data[i:j])
 print("Done.")
 exit()

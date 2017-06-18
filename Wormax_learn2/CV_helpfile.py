@@ -2,8 +2,9 @@ from itertools import groupby
 
 import cv2
 import numpy as np
-from image_preproc import bit_mask2, roi_gray, bit_mask3
+from image_preproc import bit_mask2, roi_gray, bit_mask3, bit_mask, contrast
 from screen_consts import HEIGHT, WIDTH, get_direction
+import matplotlib.pyplot as plt
 from functools import reduce
 import os
 import random
@@ -51,22 +52,65 @@ def rotated_frames(img, x, y, n_classes):
 			[cv2.flip(img, 1), get_one_hot(-x, y, n_classes)],
 			[cv2.flip(flip, 1), get_one_hot(-x, -y, n_classes)]]
 
+
 def rotated_frames2(img, x, y, n_classes):
-	rows, cols = len(img),len(img[0]),
-	M = cv2.getRotationMatrix2D((cols/2 ,rows /2 ), 15, 1)
-	dst = cv2.warpAffine(img, M, (cols, rows))#[0:cols, 0:rows]
-	return dst
+	rows, cols = len(img),len(img[0])
+	rot_M_vec = [cv2.getRotationMatrix2D((0, 0), i, 1)[:, :2] for i in np.arange(0, 360, 360 / n_classes)]
+	rot_M_img = [cv2.getRotationMatrix2D((cols/2, rows/2), i, 1) for i in np.arange(0, 360, 360 / n_classes)]
+	vec = np.array([x, y]).T
 
-while True:
-	img = cv2.resize(grab_screen(),(1280,720))
-	rotated = rotated_frames2(img, 5, 12, 12)
-	cv2.imshow("", rotated)
-	#cv2.imshow("f",img)
-	if cv2.waitKey(25) & 0xFF == ord('p'):
-		cv2.destroyAllWindows()
-		time.sleep(0.01)
+	#M = cv2.getRotationMatrix2D((cols/2 ,rows/2), angle, 1)
+	#dst = #[0:cols, 0:rows]
+	return [[cv2.warpAffine(img, rot_M_img[i], (cols, rows)), np.dot(rot_M_vec[i], vec,)] for i in range(n_classes)]
+
+arr = np.array(rotated_frames2(grab_screen(),0,1,12))
+for i in arr[:,1,]:
+	print(i)
+plt.scatter(arr[:,1,:1],arr[:,1,1:])
+plt.show()
+#dst = cv2.warpAffine(img, M, (cols, rows))  # [0:cols, 0:rows]
+
+'''
+data = []
+data_path = "data\\data_local\\"
+
+listdir = []
+dirsOnly = reduce(lambda x,y: x and y, map(lambda x: os.path.isdir(data_path + x), os.listdir(data_path)))
+if not dirsOnly:
+	listdir = list(filter(lambda x: os.path.isfile, os.listdir(data_path)))
+else:
+	for dir in os.listdir(data_path):
+		listdir += map(lambda x: dir + "\\" + x, os.listdir(data_path + dir))
+random.shuffle(listdir)
+
+for file_name in listdir:
+	if len(data) > 10000:
 		break
+	if len(data) == 0:
+		data = np.load(data_path + file_name)
+	else:
+		data = np.concatenate((data, np.load(data_path + file_name)))
+np.random.seed(100000)
 
+r = random.randint(0, len(data)-2000)
+for j,frame in enumerate(data[r:]):
+	if j%10 == 0:
+		img = frame[0]
+		kernel = np.ones((2,2))
+		img = bit_mask(img)
+		img = contrast(img, 1, (12, 12))
+		img = cv2.dilate(img, kernel, iterations=1)
+		img = cv2.erode(img, kernel, iterations=1)
+		#img = cv2.resize(grab_screen(),(1280,720))
+		for i in range(90):
+			cv2.imshow(";", cv2.resize(rotated_frames2(img, 5, 12,12,4*i), (640, 400), interpolation=cv2.INTERSECT_NONE))
+			time.sleep(0.01)
+			#cv2.imshow("f",img)
+			if cv2.waitKey(25) & 0xFF == ord('p'):
+				cv2.destroyAllWindows()
+				time.sleep(0.001)
+				break
+'''
 '''data = []
 data_path = "data\\data_local\\"
 
@@ -104,7 +148,6 @@ for frame in data[random.randint(0,len(data)-1000):len(data)]:
 				cv2.destroyAllWindows()
 				time.sleep(0.01)
 				break'''
-
 '''gray = cv2.circle(img, (120, 120), 20, (100, 200, 80), -1)
 	circles = cv2.HoughCircles(gray, cv2.HOUGH_GRADIENT, 1, 20,
 							   param1=30,
