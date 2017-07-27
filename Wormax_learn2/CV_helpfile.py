@@ -63,6 +63,17 @@ def rotated_frames2(img, x, y, n_classes):
 	#dst = #[0:cols, 0:rows]
 	return [[cv2.warpAffine(img, rot_M_img[i], (cols, rows)), np.dot(rot_M_vec[i], vec,)] for i in range(n_classes)]
 
+def get_rotated_samples(samples, n_classes):
+	final_samples = []
+	for i in samples:
+		rotated = rotated_frames2(i[0], i[1][0], i[1][1], n_classes)
+		for j in range(len(rotated)):
+			rotated[j][1] = list(get_one_hot(rotated[j][1][0], rotated[j][1][1], n_classes))
+			rotated[j][1].append(i[1][2])
+		final_samples.append(rotated)
+	return np.concatenate(final_samples)
+
+
 #arr = np.array(rotated_frames2(grab_screen(),0,1,12))
 '''for i in arr[:,1,]:
 	print(i)
