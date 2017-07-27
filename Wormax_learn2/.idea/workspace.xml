@@ -30,11 +30,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CV_helpfile.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="CV_helpfile.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CV_helpfile.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="452">
-              <caret line="70" column="19" selection-start-line="70" selection-start-column="19" selection-end-line="70" selection-end-column="19" />
+            <state relative-caret-position="214">
+              <caret line="44" column="40" selection-start-line="44" selection-start-column="40" selection-end-line="44" selection-end-column="40" />
               <folding>
                 <element signature="e#0#29#0" expanded="true" />
               </folding>
@@ -86,14 +86,22 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="prepare_data.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="prepare_data.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/prepare_data.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-989">
-              <caret line="8" column="18" selection-start-line="8" selection-start-column="18" selection-end-line="8" selection-end-column="18" />
-              <folding>
-                <element signature="e#0#18#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="68">
+              <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="alexnet.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/alexnet.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="456">
+              <caret line="83" column="4" selection-start-line="83" selection-start-column="4" selection-end-line="83" selection-end-column="4" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -102,20 +110,10 @@
         <entry file="file://$PROJECT_DIR$/image_preproc.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="388">
-              <caret line="70" column="33" selection-start-line="67" selection-start-column="29" selection-end-line="72" selection-end-column="46" />
+              <caret line="61" column="0" selection-start-line="61" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="optical_flow.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/optical_flow.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="391">
-              <caret line="27" column="0" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -144,15 +142,15 @@
         <option value="$PROJECT_DIR$/screen_consts.py" />
         <option value="$PROJECT_DIR$/image_preproc.py" />
         <option value="$PROJECT_DIR$/run_model.py" />
-        <option value="$PROJECT_DIR$/prepare_data.py" />
         <option value="$PROJECT_DIR$/CV_helpfile.py" />
+        <option value="$PROJECT_DIR$/prepare_data.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
     <option name="x" value="-8" />
     <option name="y" value="-8" />
-    <option name="width" value="1696" />
+    <option name="width" value="1692" />
     <option name="height" value="1026" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
@@ -180,6 +178,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -214,8 +214,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -224,11 +222,6 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../ImageEditing" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="D:\Python\Wormax_learn2\data\delme\delme" />
-      <recent name="D:\Python\Wormax_learn2\data\delme" />
-      <recent name="D:\Python\Wormax_learn2" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\Python\Wormax_learn2\data\delme\delme" />
       <recent name="D:\Python\Wormax_learn2\screens" />
@@ -236,8 +229,13 @@
       <recent name="D:\Python\Wormax_learn2\mergeME" />
       <recent name="D:\Python\Wormax_learn2" />
     </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Python\Wormax_learn2\data\delme\delme" />
+      <recent name="D:\Python\Wormax_learn2\data\delme" />
+      <recent name="D:\Python\Wormax_learn2" />
+    </key>
   </component>
-  <component name="RunManager" selected="Python.CV_helpfile">
+  <component name="RunManager" selected="Python.prepare_data">
     <configuration default="false" name="prepare_data" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -466,8 +464,8 @@
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.CV_helpfile" />
-        <item index="1" class="java.lang.String" itemvalue="Python.prepare_data" />
+        <item index="0" class="java.lang.String" itemvalue="Python.prepare_data" />
+        <item index="1" class="java.lang.String" itemvalue="Python.CV_helpfile" />
         <item index="2" class="java.lang.String" itemvalue="Python.run_model" />
         <item index="3" class="java.lang.String" itemvalue="Python.recorddata" />
         <item index="4" class="java.lang.String" itemvalue="Python.train_model" />
@@ -488,19 +486,19 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1696" height="1026" extended-state="7" />
+    <frame x="-8" y="-8" width="1692" height="1026" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.097104944" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16203144" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32922733" sideWeight="0.526538" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32922733" sideWeight="0.47346202" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24860023" sideWeight="0.6827503" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24860023" sideWeight="0.6827503" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32922733" sideWeight="0.49758744" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2788354" sideWeight="0.82026535" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2788354" sideWeight="0.82026535" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -533,13 +531,6 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/optical_flow.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/delme.py" />
     <entry file="file://$PROJECT_DIR$/view_data.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -552,9 +543,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="663">
           <caret line="41" column="9" selection-start-line="41" selection-start-column="9" selection-end-line="41" selection-end-column="9" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -634,9 +623,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1411">
           <caret line="90" column="26" selection-start-line="90" selection-start-column="26" selection-end-line="90" selection-end-column="26" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -705,9 +692,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1258">
           <caret line="74" column="17" selection-start-line="74" selection-start-column="17" selection-end-line="74" selection-end-column="17" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -794,20 +779,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/alexnet.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1309">
-          <caret line="83" column="4" selection-start-line="83" selection-start-column="4" selection-end-line="83" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/fix_bug.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="238">
           <caret line="15" column="34" selection-start-line="15" selection-start-column="34" selection-end-line="15" selection-end-column="34" />
-          <folding>
-            <element signature="e#0#9#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -845,6 +820,33 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python35/Lib/random.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="214">
+          <caret line="277" column="0" selection-start-line="277" selection-start-column="0" selection-end-line="277" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/image_preproc.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="388">
+          <caret line="61" column="0" selection-start-line="61" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CV_helpfile.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="214">
+          <caret line="44" column="40" selection-start-line="44" selection-start-column="40" selection-end-line="44" selection-end-column="40" />
+          <folding>
+            <element signature="e#0#29#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/getkeys.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="119">
@@ -863,41 +865,27 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/prepare_data.py">
+    <entry file="file://$PROJECT_DIR$/alexnet.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-989">
-          <caret line="8" column="18" selection-start-line="8" selection-start-column="18" selection-end-line="8" selection-end-column="18" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python35/Lib/random.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="214">
-          <caret line="277" column="0" selection-start-line="277" selection-start-column="0" selection-end-line="277" selection-end-column="0" />
+        <state relative-caret-position="456">
+          <caret line="83" column="4" selection-start-line="83" selection-start-column="4" selection-end-line="83" selection-end-column="4" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/image_preproc.py">
+    <entry file="file://$PROJECT_DIR$/data/delme/delme/frame-100-200.npy">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="388">
-          <caret line="70" column="33" selection-start-line="67" selection-start-column="29" selection-end-line="72" selection-end-column="46" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CV_helpfile.py">
+    <entry file="file://$PROJECT_DIR$/prepare_data.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="452">
-          <caret line="70" column="19" selection-start-line="70" selection-start-column="19" selection-end-line="70" selection-end-column="19" />
-          <folding>
-            <element signature="e#0#29#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="68">
+          <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
+          <folding />
         </state>
       </provider>
     </entry>

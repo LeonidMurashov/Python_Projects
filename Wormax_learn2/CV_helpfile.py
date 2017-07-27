@@ -63,12 +63,12 @@ def rotated_frames2(img, x, y, n_classes):
 	#dst = #[0:cols, 0:rows]
 	return [[cv2.warpAffine(img, rot_M_img[i], (cols, rows)), np.dot(rot_M_vec[i], vec,)] for i in range(n_classes)]
 
-arr = np.array(rotated_frames2(grab_screen(),0,1,12))
-for i in arr[:,1,]:
+#arr = np.array(rotated_frames2(grab_screen(),0,1,12))
+'''for i in arr[:,1,]:
 	print(i)
 plt.scatter(arr[:,1,:1],arr[:,1,1:])
 plt.show()
-#dst = cv2.warpAffine(img, M, (cols, rows))  # [0:cols, 0:rows]
+#dst = cv2.warpAffine(img, M, (cols, rows))  # [0:cols, 0:rows]'''
 
 '''
 data = []
@@ -91,7 +91,7 @@ for file_name in listdir:
 	else:
 		data = np.concatenate((data, np.load(data_path + file_name)))
 np.random.seed(100000)
-
+np.random.shuffle(data)
 r = random.randint(0, len(data)-2000)
 for j,frame in enumerate(data[r:]):
 	if j%10 == 0:
@@ -102,15 +102,16 @@ for j,frame in enumerate(data[r:]):
 		img = cv2.dilate(img, kernel, iterations=1)
 		img = cv2.erode(img, kernel, iterations=1)
 		#img = cv2.resize(grab_screen(),(1280,720))
-		for i in range(90):
-			cv2.imshow(";", cv2.resize(rotated_frames2(img, 5, 12,12,4*i), (640, 400), interpolation=cv2.INTERSECT_NONE))
-			time.sleep(0.01)
+		for _,i in enumerate(rotated_frames2(img, frame[1][0], frame[1][1], 12)):
+			cv2.imshow(";", cv2.resize(i[0], (640, 400), interpolation=cv2.INTERSECT_NONE))
+			print(str(get_one_hot(i[1][0], i[1][1], n_classes=12)))
+			time.sleep(1)
 			#cv2.imshow("f",img)
 			if cv2.waitKey(25) & 0xFF == ord('p'):
 				cv2.destroyAllWindows()
 				time.sleep(0.001)
-				break
-'''
+				break'''
+
 '''data = []
 data_path = "data\\data_local\\"
 
