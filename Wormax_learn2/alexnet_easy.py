@@ -27,7 +27,7 @@ def modified_alexnet(width, height, channels, lr, output=3):
     network = fully_connected(network, 256, activation='tanh')
     network = dropout(network, 0.5)
     network = fully_connected(network, 256, activation='tanh')
-    network = fully_connected(network, output, activation='sigmoid')
+    network = fully_connected(network, output, activation='softmax')
     network = regression(network, optimizer='momentum',
                          loss='categorical_crossentropy',
                          learning_rate=lr, name='targets')

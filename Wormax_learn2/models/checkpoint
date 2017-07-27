@@ -1,2 +1,2 @@
-model_checkpoint_path: "D:\\Python\\Wormax_learn2\\models\\wrm6-1e-04-15-ep-1200K-data.model"
-all_model_checkpoint_paths: "D:\\Python\\Wormax_learn2\\models\\wrm6-1e-04-15-ep-1200K-data.model"
+model_checkpoint_path: "D:\\Python\\Wormax_learn2\\models\\wrm7-1e-04-15-ep-6M-data.model"
+all_model_checkpoint_paths: "D:\\Python\\Wormax_learn2\\models\\wrm7-1e-04-15-ep-6M-data.model"
