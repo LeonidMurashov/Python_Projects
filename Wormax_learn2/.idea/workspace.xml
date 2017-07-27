@@ -92,11 +92,34 @@
       <file leaf-file-name="prepare_data.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/prepare_data.py">
           <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
             <state relative-caret-position="283">
               <caret line="38" column="21" lean-forward="false" selection-start-line="38" selection-start-column="21" selection-end-line="38" selection-end-column="21" />
+=======
+<<<<<<< HEAD
+            <state relative-caret-position="340">
+              <caret line="86" column="40" selection-start-line="86" selection-start-column="40" selection-end-line="86" selection-end-column="40" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="alexnet.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/alexnet.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="456">
+              <caret line="83" column="4" selection-start-line="83" selection-start-column="4" selection-end-line="83" selection-end-column="4" />
+              <folding />
+=======
+            <state relative-caret-position="215">
+              <caret line="58" column="44" lean-forward="true" selection-start-line="58" selection-start-column="44" selection-end-line="58" selection-end-column="44" />
+>>>>>>> 8dd0acaea3aad7084452b792942804edf662cf9d
+              <folding>
+                <element signature="e#0#18#0" expanded="true" />
+              </folding>
+>>>>>>> 7efcb4fc193259f1a607cba10094f6ff30ab9319
             </state>
           </provider>
         </entry>
@@ -539,7 +562,11 @@
     <entry file="file://$PROJECT_DIR$/prepare_data.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="663">
+<<<<<<< HEAD
+          <caret line="41" column="9" selection-start-line="41" selection-start-column="9" selection-end-line="41" selection-end-column="9" />
+=======
           <caret line="41" column="9" lean-forward="false" selection-start-line="41" selection-start-column="9" selection-end-line="41" selection-end-column="9" />
+>>>>>>> 7efcb4fc193259f1a607cba10094f6ff30ab9319
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>
@@ -621,7 +648,11 @@
     <entry file="file://$PROJECT_DIR$/prepare_data.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1411">
+<<<<<<< HEAD
+          <caret line="90" column="26" selection-start-line="90" selection-start-column="26" selection-end-line="90" selection-end-column="26" />
+=======
           <caret line="90" column="26" lean-forward="false" selection-start-line="90" selection-start-column="26" selection-end-line="90" selection-end-column="26" />
+>>>>>>> 7efcb4fc193259f1a607cba10094f6ff30ab9319
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>
@@ -692,7 +723,11 @@
     <entry file="file://$PROJECT_DIR$/prepare_data.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1258">
+<<<<<<< HEAD
+          <caret line="74" column="17" selection-start-line="74" selection-start-column="17" selection-end-line="74" selection-end-column="17" />
+=======
           <caret line="74" column="17" lean-forward="false" selection-start-line="74" selection-start-column="17" selection-end-line="74" selection-end-column="17" />
+>>>>>>> 7efcb4fc193259f1a607cba10094f6ff30ab9319
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>
@@ -851,8 +886,18 @@
     <entry file="file://$PROJECT_DIR$/data/delme/delme/frame-100-200.npy" />
     <entry file="file://$PROJECT_DIR$/prepare_data.py">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
         <state relative-caret-position="283">
           <caret line="38" column="21" lean-forward="false" selection-start-line="38" selection-start-column="21" selection-end-line="38" selection-end-column="21" />
+=======
+<<<<<<< HEAD
+        <state relative-caret-position="340">
+          <caret line="86" column="40" selection-start-line="86" selection-start-column="40" selection-end-line="86" selection-end-column="40" />
+=======
+        <state relative-caret-position="215">
+          <caret line="58" column="44" lean-forward="true" selection-start-line="58" selection-start-column="44" selection-end-line="58" selection-end-column="44" />
+>>>>>>> 7efcb4fc193259f1a607cba10094f6ff30ab9319
+>>>>>>> 8dd0acaea3aad7084452b792942804edf662cf9d
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>
