@@ -5,14 +5,18 @@ from screen_consts import get_direction
 import random
 from CV_helpfile import detect_any_worms, rotated_frames, get_one_hot
 data = []
-data_path = "data\\"
+# USE ONLY LOCAL DATA
+data_path = "data\\" + "data_local\\"
 BATCH_SIZE = 10000
 n_classes = 12
 
-listdir = []
+'''listdir = []
 for dir in os.listdir(data_path):
 	listdir += map(lambda x: dir + "\\" + x,os.listdir(data_path + dir))
 random.shuffle(listdir)
+'''
+
+listdir = os.listdir(data_path)
 
 print("Start reading data")
 
@@ -33,7 +37,8 @@ for i in range(len(data)):
 	# Creating X
 	img = data[i][0]
 	if np.average(img) < 100:
-		data[i][0], food_map = prepare_image(img, True)
+		_, food_map = prepare_image(img, True)
+		#data[i][0], food_map = prepare_image(img, True)
 		if not detect_any_worms(img, food_map):
 			dels_array.append(i)
 			no_worms += 1
@@ -55,7 +60,7 @@ data = np.delete(data,dels_array, 0)
 print("No worms:", no_worms)
 print("deleted:", len_data-len(data))
 
-np.random.shuffle(data)
+#np.random.shuffle(data)
 print("Unbalanced data:", np.round(classes))
 balance_to = np.min(classes)
 print("Start balancing to", balance_to)
@@ -85,7 +90,7 @@ print("Start saving")
 for i in range(0, len(data), BATCH_SIZE):
 	print(str(round(i/len(data)*100)) + "% complete")
 	j = min(i + BATCH_SIZE, len(data)-1)
-	np.save("preprocessed_data\\" + "preprocessed-{}-{}.npy".format(i, j), data[i:j])
+	np.save("preprocessed_data_local_notshuffled\\" + "preprocessed-{}-{}.npy".format(i, j), data[i:j])
 print("Done.")
 exit()
 

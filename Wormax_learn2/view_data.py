@@ -7,6 +7,7 @@ from image_preproc import preproc_img
 from grabscreen import grab_screen
 import time
 from functools import reduce
+from autoencoder_preproc import autoencode, autodecode
 
 data = []
 data_path = "data\\"
@@ -79,6 +80,10 @@ for i in range(len(data)-1):
 
 	cv2.imshow("Original", cv2.resize(img, (640,400), interpolation=cv2.INTERSECT_NONE))
 	cv2.imshow("FoodMap", cv2.resize(bit_mask2(img), (640,400), interpolation=cv2.INTERSECT_NONE))
+	cv2.imshow("autoencoded", cv2.resize(autoencode(cv2.cvtColor(img, cv2.COLOR_RGBA2RGB)), (208,160),
+										 interpolation=cv2.INTERSECT_NONE))
+	cv2.imshow("autodecoded", cv2.resize(autodecode(cv2.cvtColor(img, cv2.COLOR_RGBA2RGB)), (640, 400),
+										 interpolation=cv2.INTERSECT_NONE))
 	#cv2.imshow("Grayscale", cv2.resize(cv2.cvtColor(bit_mask(img), cv2.COLOR_BGR2GRAY), (640,400), interpolation=cv2.INTERSECT_NONE))
 	#cv2.imshow("HSV", cv2.resize(cv2.cvtColor(bit_mask(img), cv2.COLOR_RGB2HSV), (640,400), interpolation=cv2.INTERSECT_NONE))
 	#cv2.imshow("HSV grayscale", cv2.resize(cv2.cvtColor(cv2.cvtColor(bit_mask(img), cv2.COLOR_RGB2HSV), cv2.COLOR_BGR2GRAY), (640,400), interpolation=cv2.INTERSECT_NONE))

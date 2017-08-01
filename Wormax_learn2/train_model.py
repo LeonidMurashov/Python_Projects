@@ -4,27 +4,39 @@ import numpy as np
 from alexnet_easy import modified_alexnet
 from screen_consts import WIDTH, HEIGHT
 from CV_helpfile import get_rotated_samples
+import random
 
-LR = 1e-4
+LR = 1e-3
+uiui = 1e-3
 EPOCHS = 15
-MODEL_NAME = 'wrm7-{}-{}-ep-6M-data.model'.format('%.e'%LR,EPOCHS)
+MODEL_NAME = 'wrm10-easy-{}-{}-ep-6M-data.model'.format('%.e'%uiui,EPOCHS)
 save_path = "models/"
 n_classes = 12
 
 folder = 'preprocessed_data/'
+
 model = modified_alexnet(HEIGHT, WIDTH, 2, LR, n_classes)
+try:
+	#model = modified_alexnet(HEIGHT, WIDTH, 2, LR, n_classes)
+	model.load(save_path + MODEL_NAME)
+	print("Model loaded")
+except:
+	#model = modified_alexnet(HEIGHT, WIDTH, 2, LR, n_classes)
+	print("Cannot load model")
+
 
 for i in range(EPOCHS):
-	for raw_data_file in os.listdir(folder):
+	listdir = os.listdir(folder)
+	random.shuffle(listdir)
+	for raw_data_file in listdir:
 		raw_data = np.load(folder + raw_data_file)
 
-		# get rotated frames
+		# get rotated frame s
 		train_data_ = get_rotated_samples(raw_data, n_classes)
 		np.random.shuffle(train_data_)
 
-		for train_data in np.split(train_data_, np.array(np.arange(len(train_data_)//10, len(train_data_)*0.9, len(train_data_)//10), np.int32)):
+		for train_data in np.split(train_data_, np.array(np.arange(len(train_data_)//10, len(train_data_), len(train_data_)//10), np.int32)):
 
-			print(np.shape(train_data))
 			train = train_data[:-len(train_data)//10] # 10% of data for test
 			test = train_data[-len(train_data)//10:]
 

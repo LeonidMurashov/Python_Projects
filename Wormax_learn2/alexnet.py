@@ -16,7 +16,6 @@ from tflearn.layers.conv import conv_2d, max_pool_2d
 from tflearn.layers.core import input_data, dropout, fully_connected
 from tflearn.layers.estimator import regression
 from tflearn.layers.normalization import local_response_normalization
-from tflearn.layers.recurrent import gru
 
 def alexnet(width, height, lr):
     network = input_data(shape=[None, width, height, 1], name='input')

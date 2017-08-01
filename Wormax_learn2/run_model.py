@@ -1,4 +1,4 @@
-from alexnet import modified_alexnet
+from alexnet_easy import modified_alexnet
 from screen_consts import WIDTH, HEIGHT, get_coordinates_from_direction
 from grabscreen import grab_screen
 from image_preproc import preproc_img
@@ -19,7 +19,7 @@ def mouse_up(x, y):
 
 LR = 1e-3
 EPOCHS = 20
-MODEL_NAME = 'models/wrm6-1e-04-15-ep-1200K-data.model'
+MODEL_NAME = 'models/wrm9-1e-03-15-ep-6M-data.model'
 n_classes = 12
 
 model = modified_alexnet(WIDTH, HEIGHT, 2, LR, n_classes)
@@ -47,7 +47,7 @@ while True:
 			print("action!")
 		time.sleep(1)
 	if "C" in keys:
-		offset = -45
+		offset = -75
 		mouse_up(scr_W//2, scr_H//2+offset)
 		mouse_down(scr_W//2, scr_H//2+offset)
 		mouse_up(scr_W//2, scr_H//2+offset)

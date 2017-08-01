@@ -1,0 +1,2 @@
+model_checkpoint_path: "D:\\Python\\autoencoder_tflearn\\autoencoder-500"
+all_model_checkpoint_paths: "D:\\Python\\autoencoder_tflearn\\autoencoder-500"
