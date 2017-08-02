@@ -6,11 +6,15 @@ from tflearn.layers.estimator import regression
 from tflearn.layers.normalization import local_response_normalization
 from tflearn.layers.recurrent import gru
 import cv2
+import tensorflow as tf
 
 from screen_consts import WIDTH, HEIGHT
 CHANNELS = 3
 MODEL_NUMBER = 2
 MODEL_NAME = 'autoencoder-'+str(MODEL_NUMBER)
+
+sess = tf.Session()
+sess.as_default()
 
 input_img = input_data(shape=(HEIGHT, WIDTH, CHANNELS), name='input');print(input_img.shape)
 INPUT = input_img
