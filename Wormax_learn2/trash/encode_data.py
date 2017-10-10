@@ -1,6 +1,8 @@
-from autoencoder_preproc import autoencode
 import os
+
 import numpy as np
+
+from trash.autoencoder_preproc import autoencode
 
 folder_in = "preprocessed_data_local_notshuffled/"
 folder_out = "preprocessed_encoded_notshuffled/"

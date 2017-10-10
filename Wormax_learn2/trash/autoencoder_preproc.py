@@ -11,7 +11,7 @@ import tensorflow as tf
 from screen_consts import WIDTH, HEIGHT
 CHANNELS = 3
 MODEL_NUMBER = 2
-MODEL_NAME = 'autoencoder-'+str(MODEL_NUMBER)
+MODEL_NAME = "delme"#'autoencoder-'+str(MODEL_NUMBER)
 
 autoencoder, INPUT, HIDDEN_STATE, OUTPUT = None,None,None,None
 
@@ -68,6 +68,9 @@ def load_autoencoder():
 def build_autoencoder():
 	global autoencoder
 	autoencoder, INPUT, HIDDEN_STATE, OUTPUT = build()
+
+def save_autoencoder():
+	autoencoder.save("models/" + MODEL_NAME)
 
 def autoencode(img):
 	img = img / 255.

@@ -1,13 +1,23 @@
 from neural_network import build_model
 WIDTH, HEIGHT = 160, 100
+import win32api, win32con
 import time
 import numpy as np
 import cv2
-from autoencoder_preproc import load_autoencoder, build_autoencoder
+from autoencoder_preproc import autoencode, load_autoencoder, build_autoencoder
 import tensorflow as tf
+
+def mouse_down(x,y):
+	win32api.SetCursorPos((x,y))
+	win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, x, y, 0, 0)
+
+def mouse_up(x, y):
+	win32api.SetCursorPos((x, y))
+	win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, x, y, 0, 0)
 
 LR = 1e-3
 MODEL_NAME = 'models/wrm13-encoded-1e-04-15-ep-407k-data.model'
+
 
 tf.reset_default_graph()
 
