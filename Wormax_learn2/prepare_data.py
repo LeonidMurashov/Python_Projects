@@ -4,6 +4,8 @@ from image_preproc import prepare_image
 from screen_consts import get_direction
 import random
 from CV_helpfile import detect_any_worms, rotated_frames, get_one_hot
+from copy import deepcopy
+
 data = []
 # USE ONLY LOCAL DATA
 data_path = "data\\" + "data_local\\"
@@ -38,16 +40,16 @@ for i in range(len(data)):
 	img = data[i][0]
 	if np.average(img) < 100:
 		_, food_map = prepare_image(img, True)
-		#data[i][0], food_map = prepare_image(img, True)
+		data[i][0], food_map = prepare_image(img, True)
 		if not detect_any_worms(img, food_map):
 			dels_array.append(i)
 			no_worms += 1
 			continue
 
 		data[i][1] = [data[i][1][0], data[i][1][1], data[i][1][2]]
-		#one_hot = get_one_hot(data[i][1][0], data[i][1][1], n_classes)
+		one_hot = get_one_hot(data[i][1][0], data[i][1][1], n_classes)
 		#data[i][1] = one_hot
-		#classes[np.argmax(one_hot)] += 1
+		classes[np.argmax(one_hot)] += 1
 
 	else:
 		dels_array.append(i)
@@ -62,16 +64,23 @@ print("deleted:", len_data-len(data))
 
 #np.random.shuffle(data)
 print("Unbalanced data:", np.round(classes))
-balance_to = np.min(classes)
+balance_to = np.max(classes)
 print("Start balancing to", balance_to)
 dels_array.clear()
-for i, row in enumerate(data):
-	row_class = np.argmax(row[1])# get_direction(row[1][0], row[1][1], n_classes)
-	if classes[row_class]-balance_to >= 1:
-		dels_array.append(i)
-		classes[row_class] -= 1
 
-data = np.delete(data, dels_array, 0)
+# build up frames number to balance_to
+buildup_number = [int((balance_to - classes[cl]) // classes[cl] + 1) for cl in range(12)]
+i = 0
+while i < len(data):
+	row = data[i]
+	row_class = get_direction(row[1][0], row[1][1], n_classes)
+	if balance_to - classes[row_class] > 0:
+		classes[row_class] += 1
+		for _ in range(buildup_number[row_class]):
+			np.insert(data, i+1, deepcopy(data[i]))
+		i += buildup_number[row_class]
+	i += 1
+
 print("Balanced len:", len(data))
 print("Overall deleted:", len_data - len(data))
 
@@ -90,7 +99,7 @@ print("Start saving")
 for i in range(0, len(data), BATCH_SIZE):
 	print(str(round(i/len(data)*100)) + "% complete")
 	j = min(i + BATCH_SIZE, len(data)-1)
-	np.save("preprocessed_data_local_notshuffled\\" + "preprocessed-{}-{}.npy".format(i, j), data[i:j])
+	np.save("preprocessed_data_local_notshuffled_2ch\\" + "preprocessed-{}-{}.npy".format(i, j), data[i:j])
 print("Done.")
 exit()
 

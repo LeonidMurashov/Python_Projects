@@ -19,7 +19,7 @@ def mouse_up(x, y):
 
 LR = 1e-3
 EPOCHS = 20
-MODEL_NAME = 'models/wrm14-easy-0.001-15-ep-0.5M-data.model'
+MODEL_NAME = 'models/wrm20-modified-0.001-15-ep-0.5M-data.model'
 n_classes = 12
 
 model = modified_alexnet(WIDTH, HEIGHT, 2, LR, n_classes)

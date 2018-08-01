@@ -70,6 +70,7 @@ def get_rotated_samples(samples, n_classes):
 		for j in range(len(rotated)):
 			rotated[j][1] = list(get_one_hot(rotated[j][1][0], rotated[j][1][1], n_classes))
 			#rotated[j][1].append(i[1][2])
+			#rotated[j][1].append(i[1][2])
 		final_samples.append(rotated)
 	return np.concatenate(final_samples)
 

@@ -9,7 +9,7 @@ import time
 from functools import reduce
 
 data = []
-data_path = "preprocessed_data_local_notshuffled\\"
+data_path = "preprocessed_data_local_notshuffled_2ch\\"
 
 listdir = []
 dirsOnly = reduce(lambda x,y: x and y, map(lambda x: os.path.isdir(data_path + x), os.listdir(data_path)))
@@ -29,7 +29,7 @@ for file_name in listdir:
 		data = np.concatenate((data, np.load(data_path + file_name)))
 
 for i in range(len(data)-1):
-	img = prepare_image(data[i][0])
+	img = data[i][0]
 	if "Y" in key_check():
 		cv2.imwrite("test.jpg", img)
 		time.sleep(1)
