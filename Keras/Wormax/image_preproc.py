@@ -30,6 +30,11 @@ def preproc_img(img):
 							[0,HEIGHT]], np.int32)])
 	return img
 
+def get_scaled_and_near_head(img):
+
+	return [resized, near_head]
+
+
 def bit_mask(img):
 	ret, th1 = cv2.threshold(img, 60, 255, cv2.THRESH_TOZERO)
 	return th1
