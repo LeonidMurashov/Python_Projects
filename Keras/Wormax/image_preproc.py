@@ -30,8 +30,8 @@ def preproc_img(img):
 							[0,HEIGHT]], np.int32)])
 	return img
 
-def get_preprocessed_and_map(img):
-	return preproc_img(img), cv2.resize(img[905:1050-13, 1535:1680-13,1],(33,33))
+def get_preprocessed_and_other(img):
+	return preproc_img(img), cv2.resize(img[905:1050-13, 1535:1680-13,1],(33,33)), img[245:257, 1600:1664]
 
 def bit_mask(img):
 	ret, th1 = cv2.threshold(img, 60, 255, cv2.THRESH_TOZERO)
