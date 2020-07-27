@@ -29,13 +29,13 @@ def get_angle(x, y):
 def get_direction(x, y, n_classes = 12):
 	return round(get_angle(x, y)/2/pi*n_classes)%n_classes#round((get_angle(x, y)+pi)/(2*pi)*nclasses+6)%nclasses
 
-def get_cartesian(fi, scr_W, scr_H):
+def get_cartesian(fi, scr_W, scr_H, radius=0.5):
 	a = min(scr_W, scr_H)/2
-	return int(a*cos(fi)/2 + scr_W/2), int(a*sin(fi)/2 + scr_H/2)
+	return int(a*cos(fi)*radius + scr_W/2), int(a*sin(fi)*radius + scr_H/2)
 
-def get_coordinates_from_direction(dir, scr_W, scr_H, n_classes = 12):
+def get_coordinates_from_direction(dir, scr_W, scr_H, n_classes = 12, radius=0.5):
 	angle = (dir / n_classes) * 2 * pi
-	return get_cartesian(angle, scr_W, scr_H)
+	return get_cartesian(angle, scr_W, scr_H, radius)
 
 
 #####9####

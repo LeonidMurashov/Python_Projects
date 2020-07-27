@@ -12,3 +12,13 @@
 *.rar
 *.zip
 *.jpg
+.idea/
+
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+venv/
+__pycache__/
+
+
+# !*/worm_single_large_adam.h5
+!*/Keras/Wormax/worm_single_large_adam.h5
